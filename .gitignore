@@ -41,3 +41,17 @@ skeleton/debug/**
 
 # Zip files
 *.zip
+Practica1/debug/game.tlog/CL.write.1.tlog
+Practica1/debug/game.tlog/CL.read.1.tlog
+Practica1/debug/game.tlog/CL.command.1.tlog
+Practica1/debug/game.log
+Practica1/.vs/game/v17/ipch/AutoPCH/f7d0f07f8f64a16c/MAIN.ipch
+Practica1/.vs/game/v17/ipch/AutoPCH/eb9351cf7bf99deb/PROYECTILE.ipch
+Practica1/.vs/game/v17/fileList.bin
+Practica1/.vs/game/v17/Browse.VC.opendb
+Practica1/.vs/game/v17/Browse.VC.db-wal
+Practica1/.vs/game/v17/Browse.VC.db-shm
+Practica1/.vs/game/v17/Browse.VC.db
+Practica1/.vs/game/v17/.suo
+Practica1/.vs/game/FileContentIndex/read.lock
+Practica1/.vs/game/FileContentIndex/734530ee-f935-4f2d-9f81-5fc85565fe9a.vsidx

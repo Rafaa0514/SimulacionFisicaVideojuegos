@@ -4,9 +4,9 @@
 enum ProyectileType { CANON, FIREBALL, BULLET, LASER };
 
 // ----- VALORES -----
-// Cañón:			Velocidad -> 450		Masa -> 2.9			Velocidad simulada -> 45
+// Cañón:			Velocidad -> 50			Masa -> 2.9			Velocidad simulada -> 35
 // Bola de fuego:	Velocidad -> 6			Masa -> 1 * 10^-7	Velocidad simulada -> 20
-// Bala :			Velocidad -> 360		Masa -> 0.008		Velocidad simulada -> 36
+// Bala :			Velocidad -> 360		Masa -> 0.008		Velocidad simulada -> 72
 // Laser :			Velocidad -> 300000000	Masa -> 0			Velocidad simulada -> 100
 
 class Proyectile : public Particle {
