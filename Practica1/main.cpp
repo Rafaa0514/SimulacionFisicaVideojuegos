@@ -7,7 +7,7 @@
 #include "core.hpp"
 #include "RenderUtils.hpp"
 #include "callbacks.hpp"
-#include "Particle.h"
+#include "Proyectile.h"
 
 #include <iostream>
 
@@ -30,8 +30,9 @@ PxPvd*                  gPvd        = NULL;
 PxDefaultCpuDispatcher*	gDispatcher = NULL;
 PxScene*				gScene      = NULL;
 ContactReportCallback gContactReportCallback;
-
 Particle* part = nullptr;
+Proyectile* proy = nullptr;
+std::vector<Proyectile*> proyectiles;
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -56,10 +57,7 @@ void initPhysics(bool interactive)
 	sceneDesc.filterShader = contactReportFilterShader;
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
-
-	// Particle
-	part = new Particle(Vector3(0, 0, 0), Vector3(1, 1, 1));
-	}
+}
 
 
 // Function to configure what happens in each step of physics
@@ -71,19 +69,16 @@ void stepPhysics(bool interactive, double t)
 
 	gScene->simulate(t);
 	gScene->fetchResults(true);
-	part->integrate(t);
+
+	for (Proyectile* proy : proyectiles) proy->integrate(t);
 }
 
 // Function to clean data
 // Add custom code to the begining of the function
 void cleanupPhysics(bool interactive)
 {
+	delete proy; proy = nullptr;
 	PX_UNUSED(interactive);
-
-	// Destroy Particle
-	delete part;
-	part = nullptr;
-
 	// Rigid Body ++++++++++++++++++++++++++++++++++++++++++
 	gScene->release();
 	gDispatcher->release();
@@ -94,7 +89,7 @@ void cleanupPhysics(bool interactive)
 	transport->release();
 	
 	gFoundation->release();
-	}
+}
 
 // Function called when a key is pressed
 void keyPress(unsigned char key, const PxTransform& camera)
@@ -103,12 +98,10 @@ void keyPress(unsigned char key, const PxTransform& camera)
 
 	switch(toupper(key))
 	{
-	//case 'B': break;
-	//case ' ':	break;
-	case ' ':
-	{
-		break;
-	}
+	case 'C': proyectiles.push_back(new Proyectile(camera.p, GetCamera()->getDir(), ProyectileType::CANON)); break;
+	case 'F': proyectiles.push_back(new Proyectile(camera.p, GetCamera()->getDir(), ProyectileType::FIREBALL)); break;
+	case 'B': proyectiles.push_back(new Proyectile(camera.p, GetCamera()->getDir(), ProyectileType::BULLET)); break;
+	case 'L': proyectiles.push_back(new Proyectile(camera.p, GetCamera()->getDir(), ProyectileType::LASER)); break;
 	default:
 		break;
 	}

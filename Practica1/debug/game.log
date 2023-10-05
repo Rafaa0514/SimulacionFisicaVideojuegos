@@ -1,5 +1,8 @@
-﻿  main.cpp
+﻿  Proyectile.cpp
 C:\Users\rafa0\Desktop\GitHub\SimulacionFisicaVideojuegos\common\PhysX-3.4\PxShared\include\task\PxTask.h(329,1): warning C5220: "physx::PxLightCpuTask::mRefCount": un miembro de datos no estático con un tipo calificado volátil ya no implica
            que los constructores de copia/movimiento generados por el compilador y los operadores de asignación de copia o movimiento no sean triviales
 C:\Users\rafa0\Desktop\GitHub\SimulacionFisicaVideojuegos\common\PhysX-3.4\PxShared\include\task\PxTask.h(326,19): message : vea la declaración de 'physx::PxLightCpuTask::mRefCount'
+C:\Users\rafa0\Desktop\GitHub\SimulacionFisicaVideojuegos\common\PhysX-3.4\PxShared\include\foundation\PxVec3.h(303): warning C5045: El compilador insertará la mitigación de Spectre para la carga de memoria si se especificó el modificador /Qspectre
+  C:\Users\rafa0\Desktop\GitHub\SimulacionFisicaVideojuegos\common\PhysX-3.4\PxShared\include\foundation\PxVec3.h(302) : nota: el intervalo "m" del índice se comprobó por comparación en esta línea
+  C:\Users\rafa0\Desktop\GitHub\SimulacionFisicaVideojuegos\common\PhysX-3.4\PxShared\include\foundation\PxVec3.h(303) : nota: suministra la llamada en esta línea
   game.vcxproj -> C:\Users\rafa0\Desktop\GitHub\SimulacionFisicaVideojuegos\bin\gameDEBUG.exe
