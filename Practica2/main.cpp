@@ -10,6 +10,8 @@
 
 #include <iostream>
 
+#include "objects/systems/ParticleSystem.h"
+
 std::string display_text = "This is a test";
 
 
@@ -29,6 +31,8 @@ PxPvd*                  gPvd        = NULL;
 PxDefaultCpuDispatcher*	gDispatcher = NULL;
 PxScene*				gScene      = NULL;
 ContactReportCallback gContactReportCallback;
+
+ParticleSystem* pSys = nullptr;
 
 
 // Initialize physics engine
@@ -54,7 +58,9 @@ void initPhysics(bool interactive)
 	sceneDesc.filterShader = contactReportFilterShader;
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
-	}
+
+	pSys = new ParticleSystem();
+}
 
 
 // Function to configure what happens in each step of physics
@@ -65,6 +71,7 @@ void stepPhysics(bool interactive, double t)
 	PX_UNUSED(interactive);
 
 	gScene->simulate(t);
+	pSys->update(t);
 	gScene->fetchResults(true);
 }
 
@@ -73,7 +80,7 @@ void stepPhysics(bool interactive, double t)
 void cleanupPhysics(bool interactive)
 {
 	PX_UNUSED(interactive);
-
+	delete pSys;
 	// Rigid Body ++++++++++++++++++++++++++++++++++++++++++
 	gScene->release();
 	gDispatcher->release();
@@ -84,7 +91,7 @@ void cleanupPhysics(bool interactive)
 	transport->release();
 	
 	gFoundation->release();
-	}
+}
 
 // Function called when a key is pressed
 void keyPress(unsigned char key, const PxTransform& camera)

@@ -3,9 +3,20 @@
 
 class UniformParticleGenerator : public ParticleGenerator {
 protected:
-	Vector3 vel_width, pos_witdh;
+
+	uniform_real_distribution<float>* velX;
+	uniform_real_distribution<float>* velY;
+	uniform_real_distribution<float>* velZ;
+	uniform_real_distribution<float>* posX;
+	uniform_real_distribution<float>* posY;
+	uniform_real_distribution<float>* posZ;
 
 public:
-	UniformParticleGenerator(Vector3 pos, Vector3 vel);
+	UniformParticleGenerator(Particle* model, Vector3 var, float pro, bool up = true);
+	virtual ~UniformParticleGenerator();
 	virtual list<Particle*> generateParticles();
+
+	// Asignar valor a los intervalos
+	void assignVel();
+	void assignPos();
 };
