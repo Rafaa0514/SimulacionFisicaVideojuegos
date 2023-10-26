@@ -1,7 +1,7 @@
 #include "UniformParticleGenerator.h"
 
-UniformParticleGenerator::UniformParticleGenerator(Particle* model, Vector3 var, float pro, bool up)
-	: ParticleGenerator(model, var, pro, up) {
+UniformParticleGenerator::UniformParticleGenerator(string n, Particle* model, Vector3 var, float pro, bool up)
+	: ParticleGenerator(n, model, var, pro, up) {
 	// Asignamos valores al intervalo de velocidad
 	assignVel();
 	// Si las partículas pueden crearse desde mas de un punto
@@ -16,22 +16,21 @@ UniformParticleGenerator::~UniformParticleGenerator() {
 list<Particle*> UniformParticleGenerator::generateParticles() {
 	list<Particle*> newParts;
 
-	float random = (rand() % 101) / 100.0f;
-
-	if (random < generation_probability) {
-		// Variables aleatorias
-		Vector3 vel = Vector3((*velX)(gen), (*velY)(gen), (*velZ)(gen));
-		int lifeTime = rand() % 10 + 3;
-
+	if (rndProb(rg) < generation_probability) {
 		// Crear partícula
-		if (!uniquePoint) {
-			Vector3 pos = Vector3((*posX)(gen), (*posY)(gen), (*posZ)(gen));
-			newParts.push_back(model_part->clone(pos, vel, lifeTime));
-		}
-		else newParts.push_back(model_part->clone(model_part->getPos(), vel, lifeTime));
+		if (!uniquePoint) newParts.push_back(model_part->clone(calculatePos(), calculateVel(), GLOBAL_GRAVITY));
+		else newParts.push_back(model_part->clone(model_part->getPos(), calculateVel(), GLOBAL_GRAVITY));
 	}
 
 	return newParts;
+}
+
+Vector3 UniformParticleGenerator::calculateVel() {
+	return Vector3((*velX)(rg), (*velY)(rg), (*velZ)(rg));
+}
+
+Vector3 UniformParticleGenerator::calculatePos() {
+	return Vector3((*posX)(rg), (*posY)(rg), (*posZ)(rg));
 }
 
 void UniformParticleGenerator::assignVel() {

@@ -25,6 +25,12 @@
     <ClCompile Include="objects\generators\UniformParticleGenerator.cpp">
       <Filter>objects\generators</Filter>
     </ClCompile>
+    <ClCompile Include="objects\physicObjects\Firework.cpp">
+      <Filter>objects\physicObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="objects\generators\FireworkGenerator.cpp">
+      <Filter>objects\generators</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -49,6 +55,12 @@
       <Filter>objects\generators</Filter>
     </ClInclude>
     <ClInclude Include="objects\generators\UniformParticleGenerator.h">
+      <Filter>objects\generators</Filter>
+    </ClInclude>
+    <ClInclude Include="objects\physicObjects\Firework.h">
+      <Filter>objects\physicObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="objects\generators\FireworkGenerator.h">
       <Filter>objects\generators</Filter>
     </ClInclude>
   </ItemGroup>

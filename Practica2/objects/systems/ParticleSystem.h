@@ -1,23 +1,20 @@
 #pragma once
 #include "../generators/UniformParticleGenerator.h"
+#include "../generators/GaussianParticleGenerator.h"
+#include "../generators/FireworkGenerator.h"
 #include <list>
 #include <vector>
 
-
-// enum Colors { RED, BLUE, YELLOW, GREEN };
-// 
-// vector<Vector4> colores = {
-// 	Vector4(255, 0, 0, 1),
-// 	Vector4(0, 255, 255, 1),
-// 	Vector4(255, 255, 0, 1),
-// 	Vector4(0, 255, 0, 1)
-// };
 
 class ParticleSystem {
 protected:
 	std::list<Particle*> myParticles;
 	std::list<ParticleGenerator*> particleGenerators;
 	std::vector<list<Particle*>::iterator> deadParticles;
+
+	std::list<Firework*> fireworks_pool;
+	FireworkGenerator* fireworkGen;
+	std::vector<list<Firework*>::iterator> deadFireworks;
 
 public:
 	ParticleSystem();

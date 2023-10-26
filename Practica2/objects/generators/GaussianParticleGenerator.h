@@ -3,10 +3,25 @@
 
 class GaussianParticleGenerator : public ParticleGenerator {
 protected:
-	Vector3 std_dev_pos, std_dev_vel;
-	double std_dev_t;
+	normal_distribution<float>* velX;
+	normal_distribution<float>* velY;
+	normal_distribution<float>* velZ;
+
+	normal_distribution<float>* posX;
+	normal_distribution<float>* posY;
+	normal_distribution<float>* posZ;
+
 
 public:
-	GaussianParticleGenerator(Vector3 pos, Vector3 vel);
+	GaussianParticleGenerator(string n, Particle* model, Vector3 vel, float prob, bool up = true);
+	virtual ~GaussianParticleGenerator();
+
+	// Metodos abstractos
 	virtual list<Particle*> generateParticles();
+	virtual Vector3 calculateVel();
+	virtual Vector3 calculatePos();
+
+	// Asignar valor a los intervalos
+	void assignVel();
+	void assignPos();
 };

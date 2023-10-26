@@ -1,10 +1,11 @@
 #pragma once
 #include <string>
 #include <list>
-#include <chrono>
 #include <random>
 #include "../physicObjects/Particle.h"
+
 using namespace std;
+using random_generator = std::mt19937;
 
 class ParticleGenerator {
 protected:
@@ -18,10 +19,14 @@ protected:
 
 	// Cosas de probabilidades
 	double generation_probability = 1.0;
-	default_random_engine gen;
+
+	// Cosas de aleatorios
+	std::random_device rd;
+	random_generator rg;
+	uniform_real_distribution<> rndProb;
 
 public:
-	ParticleGenerator(Particle* p, Vector3 var, double prob, bool up);
+	ParticleGenerator(string n, Particle* p, Vector3 var, double prob, bool up);
 	~ParticleGenerator();
 
 	// Setters
@@ -35,4 +40,6 @@ public:
 	inline Vector3 getMeanVelocity() const { return mean_vel; }
 
 	virtual list<Particle*> generateParticles() = 0;
+	virtual Vector3 calculateVel() = 0;
+	virtual Vector3 calculatePos() = 0;
 };

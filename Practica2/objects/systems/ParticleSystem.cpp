@@ -1,9 +1,24 @@
 #include "ParticleSystem.h"
 
 ParticleSystem::ParticleSystem() {
-	Particle* model = new Particle(Vector3(0), Vector3(30), 4, Vector4(0, 255, 0, 1), 2);
-	ParticleGenerator* pGen = new UniformParticleGenerator(model, Vector3(60), 0.01f);
-	particleGenerators.push_back(pGen);
+	// ----- PARTÍCULAS -----
+	Particle* model1 = new Particle(Vector3(0), Vector3(30), Vector3(0), 2, colores[GREEN], 2);
+	ParticleGenerator* pGen1 = new UniformParticleGenerator("El uniforme", model1, Vector3(60), 0.1f);
+	particleGenerators.push_back(pGen1);
+
+	 Particle* model2 = new Particle(Vector3(0), Vector3(30), Vector3(0), 6, colores[RED], 2);
+	 ParticleGenerator* pGen2 = new GaussianParticleGenerator("El Gaussiano", model2, Vector3(60), 0.1f, false);
+	 particleGenerators.push_back(pGen2);
+
+
+	// ----- FUEGOS ARTIFICIALES -----
+	/*Firework* fModel1 = new Firework(Vector3(-50, 0, -100), Vector3(0,100,0), Vector3(0), colores[RED], 4.0f, 3, 10);
+	fireworks_pool.push_back(fModel1);
+
+	Firework* fModel2 = new Firework(Vector3(-75, 0, -100), Vector3(0, 50, 0), Vector3(0), colores[GREEN], 2.0f, 5, 7);
+	fireworks_pool.push_back(fModel2);
+
+	fireworkGen = new FireworkGenerator("FIREWORKS BABY", Vector3(30, 5, 30));*/
 }
 
 ParticleSystem::~ParticleSystem() {
@@ -15,7 +30,7 @@ ParticleSystem::~ParticleSystem() {
 }
 
 void ParticleSystem::update(double t) {
-
+	// ----- PARTÍCULAS -----
 	for (ParticleGenerator* p : particleGenerators) {
 		list<Particle*> prtcls = p->generateParticles();
 		if (!prtcls.empty()) myParticles.splice(myParticles.end(), prtcls);
@@ -32,6 +47,23 @@ void ParticleSystem::update(double t) {
 		myParticles.erase(deadParticles[i]);
 	}
 	deadParticles.clear();
+
+	// ----- FUEGOS ARTIFICIALES -----
+	/*for (auto it = fireworks_pool.begin(); it != fireworks_pool.end(); it++) {
+		if (!(*it)->integrate(t)) {
+			deadFireworks.push_back(it);
+		}
+	}
+
+	for (int i = 0; i < deadFireworks.size(); i++) {
+		if ((*deadFireworks[i])->getGeneration() > 1) {
+			list<Firework*> fs = fireworkGen->generateFireworks(*deadFireworks[i]);
+			if (!fireworks_pool.empty()) fireworks_pool.splice(fireworks_pool.end(), fs);
+		}
+		delete* deadFireworks[i];
+		fireworks_pool.erase(deadFireworks[i]);
+	}
+	deadFireworks.clear();*/
 }
 
 ParticleGenerator* ParticleSystem::getParticleGenerator(string name) {
