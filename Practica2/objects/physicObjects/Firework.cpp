@@ -8,5 +8,5 @@ Firework::~Firework() {
 }
 
 Firework* Firework::clone(Vector3 p, Vector3 v, float lt, int s) const {
-	return new Firework(p, v, acceleration, renderItem->color, lifeTime, gen - 1, s);
+	return new Firework(p, v, Vector3(0,-10,0), renderItem->color, lt, gen - 1, s);
 }

@@ -9,7 +9,6 @@ const float FIREWORK_RAD = 3;
 class Firework : public Particle {
 protected:
 	int gen, nSons;
-	string myGenerator;
 	float maxLife;
 
 public:

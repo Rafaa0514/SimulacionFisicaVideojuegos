@@ -12,13 +12,13 @@ ParticleSystem::ParticleSystem() {
 
 
 	// ----- FUEGOS ARTIFICIALES -----
-	/*Firework* fModel1 = new Firework(Vector3(-50, 0, -100), Vector3(0,100,0), Vector3(0), colores[RED], 4.0f, 3, 10);
+	/*Firework* fModel1 = new Firework(Vector3(-50, 0, -100), Vector3(0,100,0), Vector3(0), colores[RED], 4.0f, 3, 8);
 	fireworks_pool.push_back(fModel1);
 
-	Firework* fModel2 = new Firework(Vector3(-75, 0, -100), Vector3(0, 50, 0), Vector3(0), colores[GREEN], 2.0f, 5, 7);
+	Firework* fModel2 = new Firework(Vector3(-200, 0, -300), Vector3(0, 100, 0), Vector3(0,-10,0), colores[GREEN], 5.0f, 3, 7);
 	fireworks_pool.push_back(fModel2);
 
-	fireworkGen = new FireworkGenerator("FIREWORKS BABY", Vector3(30, 5, 30));*/
+	fireworkGen = new FireworkGenerator("FIREWORKS BABY", Vector3(30, 100, 30));*/
 }
 
 ParticleSystem::~ParticleSystem() {

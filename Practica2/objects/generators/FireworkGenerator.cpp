@@ -12,8 +12,8 @@ FireworkGenerator::~FireworkGenerator() {
 list<Firework*> FireworkGenerator::generateFireworks(Firework* f) {
 	assignVel(f->getVel());
 	list<Firework*> newFs;
+	float newLT = calculateLT(f->getLifetime(), f->getGeneration());
 	for (int i = 0; i < f->getNumberSons(); i++) {
-		float newLT = calculateLT(f->getLifetime(), f->getGeneration());
 		int sons = calculateSons(f->getNumberSons());
 		if (uniquePoint) 
 			newFs.push_back(f->clone(f->getPos(), calculateVel(), newLT, sons));
@@ -28,9 +28,9 @@ void FireworkGenerator::assignVel(Vector3 const& v) {
 		delete velX; delete velY; delete velZ;
 	}
 
-	velX = new uniform_real_distribution<float>(v.x - mean_var.x, v.x + mean_var.x);
-	velY = new uniform_real_distribution<float>(v.y - mean_var.y, v.y + mean_var.y);
-	velZ = new uniform_real_distribution<float>(v.z - mean_var.z, v.z + mean_var.z);
+	velX = new uniform_real_distribution<float>(v.x, v.x + mean_var.x);
+	velY = new uniform_real_distribution<float>(0, mean_var.y);
+	velZ = new uniform_real_distribution<float>(v.z, v.z + mean_var.z);
 }
 
 Vector3 FireworkGenerator::calculateVel() {
@@ -49,7 +49,8 @@ Vector3 FireworkGenerator::calculatePos(Vector3 const& p, float r) {
 
 
 float FireworkGenerator::calculateLT(float ltF, int g) {
-	return (float) (ltF / g) * (g + 1);
+	float lifeperG = (float) ltF / g;
+	return lifeperG * (g - 1);
 }
 
 int FireworkGenerator::calculateSons(int fSons) {
