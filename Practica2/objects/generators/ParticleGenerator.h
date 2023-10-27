@@ -16,6 +16,7 @@ protected:
 	// Particula modelo y medias de vel, pos y varianza
 	Particle* model_part = nullptr;
 	Vector3 mean_pos, mean_vel, meanVar;
+	Vector3 varPos;
 
 	// Cosas de probabilidades
 	double generation_probability = 1.0;
@@ -26,7 +27,7 @@ protected:
 	uniform_real_distribution<> rndProb;
 
 public:
-	ParticleGenerator(string n, Particle* p, Vector3 var, double prob, bool up);
+	ParticleGenerator(string n, Particle* p, Vector3 var, double prob, bool up, Vector3 vp);
 	~ParticleGenerator();
 
 	// Setters

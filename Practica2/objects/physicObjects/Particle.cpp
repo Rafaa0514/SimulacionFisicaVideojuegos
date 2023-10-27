@@ -1,8 +1,8 @@
 #include "Particle.h"
 
-Particle::Particle(Vector3 pos, Vector3 v, Vector3 acc, float rad, Vector4 color, float lt, float dp) :
+Particle::Particle(Vector3 pos, Vector3 v, Vector3 acc, float rad, Vector4 color, double lt, float dp) :
 	pose(pos), vel(v), acceleration(acc), damping(dp), 
-	lifeTime(lt), startTime(GetLastTime()), radious(rad),
+	lifeTime(lt), radious(rad),
 	renderItem(new RenderItem(CreateShape(physx::PxSphereGeometry(rad)),
 		&pose, color)) {
 
@@ -19,8 +19,8 @@ bool Particle::integrate(double t) {
 	vel += acceleration * t;
 
 	vel *= powf(damping, t);
-	float a = GetLastTime();
-	if (startTime + lifeTime < GetLastTime() || pose.p.y < VERTICAL_LIMIT) return false;
+	lifeTime -= t;
+	if (lifeTime <= 0 || pose.p.y < VERTICAL_LIMIT) return false;
 	return true;
 }
 

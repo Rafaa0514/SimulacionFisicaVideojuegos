@@ -2,20 +2,30 @@
 
 ParticleSystem::ParticleSystem() {
 	// ----- PARTÍCULAS -----
-	Particle* model1 = new Particle(Vector3(0), Vector3(30), Vector3(0), 2, colores[GREEN], 2);
-	ParticleGenerator* pGen1 = new UniformParticleGenerator("El uniforme", model1, Vector3(60), 0.1f);
-	particleGenerators.push_back(pGen1);
+	/*Particle* model1 = new Particle(Vector3(-50, 0, -100), Vector3(30), Vector3(0), 2, colores[GREEN], 2.5f);
+	ParticleGenerator* pGen1 = new UniformParticleGenerator("El uniforme", model1, Vector3(60), 0.7f);
+	particleGenerators.push_back(pGen1);*/
 
-	 Particle* model2 = new Particle(Vector3(0), Vector3(30), Vector3(0), 6, colores[RED], 2);
-	 ParticleGenerator* pGen2 = new GaussianParticleGenerator("El Gaussiano", model2, Vector3(60), 0.1f, false);
-	 particleGenerators.push_back(pGen2);
+	/*Particle* model2 = new Particle(Vector3(-50, 0, -100), Vector3(0), Vector3(0), 2, colores[GREEN], 2);
+	ParticleGenerator* pGen2 = new UniformParticleGenerator("El uniforme", model2, Vector3(1), 0.7f, false, Vector3(100,1,1));
+	particleGenerators.push_back(pGen2);*/
+
+	/*Particle* model3 = new Particle(Vector3(-300, 0, -100), Vector3(30), Vector3(0), 6, colores[RED], 2);
+	ParticleGenerator* pGen3 = new GaussianParticleGenerator("El Gaussiano", model3, Vector3(70), 0.7f);
+	particleGenerators.push_back(pGen3);*/
+
+	/*Particle* model4 = new Particle(Vector3(-300, 0, -100), Vector3(0), Vector3(0), 6, colores[BLACK], 2);
+	ParticleGenerator* pGen4 = new GaussianParticleGenerator("El Gaussiano", model4, Vector3(1), 0.7f, false, Vector3(100,1,1));
+	particleGenerators.push_back(pGen4);*/
+
+	 
 
 
 	// ----- FUEGOS ARTIFICIALES -----
 	/*Firework* fModel1 = new Firework(Vector3(-50, 0, -100), Vector3(0,100,0), Vector3(0), colores[RED], 4.0f, 3, 8);
 	fireworks_pool.push_back(fModel1);
 
-	Firework* fModel2 = new Firework(Vector3(-200, 0, -300), Vector3(0, 100, 0), Vector3(0,-10,0), colores[GREEN], 5.0f, 3, 7);
+	Firework* fModel2 = new Firework(Vector3(-200, 0, -300), Vector3(0, 100, 0), Vector3(0,-10,0), colores[GREEN], 5.0f, 5, 7);
 	fireworks_pool.push_back(fModel2);
 
 	fireworkGen = new FireworkGenerator("FIREWORKS BABY", Vector3(30, 100, 30));*/
@@ -49,7 +59,7 @@ void ParticleSystem::update(double t) {
 	deadParticles.clear();
 
 	// ----- FUEGOS ARTIFICIALES -----
-	/*for (auto it = fireworks_pool.begin(); it != fireworks_pool.end(); it++) {
+	for (auto it = fireworks_pool.begin(); it != fireworks_pool.end(); it++) {
 		if (!(*it)->integrate(t)) {
 			deadFireworks.push_back(it);
 		}
@@ -63,7 +73,7 @@ void ParticleSystem::update(double t) {
 		delete* deadFireworks[i];
 		fireworks_pool.erase(deadFireworks[i]);
 	}
-	deadFireworks.clear();*/
+	deadFireworks.clear();
 }
 
 ParticleGenerator* ParticleSystem::getParticleGenerator(string name) {

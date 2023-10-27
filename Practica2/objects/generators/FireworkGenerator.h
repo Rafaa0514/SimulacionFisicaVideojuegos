@@ -29,6 +29,6 @@ public:
 	virtual void assignVel(Vector3 const& v);
 	virtual Vector3 calculateVel();
 	virtual Vector3 calculatePos(Vector3 const& p, float r);
-	virtual float calculateLT(float ltF, int g);
+	virtual double calculateLT(double ltF, int g);
 	virtual int calculateSons(int fSons);
 };

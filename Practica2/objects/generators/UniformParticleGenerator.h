@@ -13,7 +13,7 @@ protected:
 
 
 public:
-	UniformParticleGenerator(string n, Particle* model, Vector3 var, float pro, bool up = true);
+	UniformParticleGenerator(string n, Particle* model, Vector3 var, float pro, bool up = true, Vector3 varP = Vector3(1));
 	virtual ~UniformParticleGenerator();
 
 	// Metodos abstractos

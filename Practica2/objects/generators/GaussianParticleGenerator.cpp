@@ -1,7 +1,7 @@
 #include "GaussianParticleGenerator.h"
 
-GaussianParticleGenerator::GaussianParticleGenerator(string n, Particle* model, Vector3 var, float prob, bool up) : 
-	ParticleGenerator(n, model, var, prob, up) {
+GaussianParticleGenerator::GaussianParticleGenerator(string n, Particle* model, Vector3 var, float prob, bool up, Vector3 vp) : 
+	ParticleGenerator(n, model, var, prob, up, vp) {
 	// Distribuciones de velocidad
 	assignVel();
 	// Distribuciones de posición
@@ -34,14 +34,14 @@ Vector3 GaussianParticleGenerator::calculatePos() {
 }
 
 void GaussianParticleGenerator::assignVel() {
-	velX = new normal_distribution<float>(mean_vel.x - meanVar.x, mean_vel.x + meanVar.x);
-	velY = new normal_distribution<float>(mean_vel.y - meanVar.y, mean_vel.y + meanVar.y);
-	velZ = new normal_distribution<float>(mean_vel.z - meanVar.z, mean_vel.z + meanVar.z);
+	velX = new normal_distribution<float>(mean_vel.x, meanVar.x);
+	velY = new normal_distribution<float>(mean_vel.y, meanVar.y);
+	velZ = new normal_distribution<float>(mean_vel.z, meanVar.z);
 }
 
 
 void GaussianParticleGenerator::assignPos() {
-	posX = new normal_distribution<float>(mean_pos.x - meanVar.x * 2, mean_pos.x + meanVar.x / 2.0f);
-	posY = new normal_distribution<float>(mean_pos.y - meanVar.y * 2, mean_pos.y + meanVar.y / 2.0f);
-	posZ = new normal_distribution<float>(mean_pos.z - meanVar.z * 2, mean_pos.z + meanVar.z / 2.0f);
+	posX = new normal_distribution<float>(mean_pos.x, varPos.x);
+	posY = new normal_distribution<float>(mean_pos.y, varPos.y);
+	posZ = new normal_distribution<float>(mean_pos.z, varPos.z);
 }

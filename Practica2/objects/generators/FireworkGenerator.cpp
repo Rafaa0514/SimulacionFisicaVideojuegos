@@ -12,7 +12,7 @@ FireworkGenerator::~FireworkGenerator() {
 list<Firework*> FireworkGenerator::generateFireworks(Firework* f) {
 	assignVel(f->getVel());
 	list<Firework*> newFs;
-	float newLT = calculateLT(f->getLifetime(), f->getGeneration());
+	double newLT = calculateLT(f->getLifetime(), f->getGeneration());
 	for (int i = 0; i < f->getNumberSons(); i++) {
 		int sons = calculateSons(f->getNumberSons());
 		if (uniquePoint) 
@@ -48,8 +48,8 @@ Vector3 FireworkGenerator::calculatePos(Vector3 const& p, float r) {
 }
 
 
-float FireworkGenerator::calculateLT(float ltF, int g) {
-	float lifeperG = (float) ltF / g;
+double FireworkGenerator::calculateLT(double ltF, int g) {
+	double lifeperG = (double) ltF / g;
 	return lifeperG * (g - 1);
 }
 

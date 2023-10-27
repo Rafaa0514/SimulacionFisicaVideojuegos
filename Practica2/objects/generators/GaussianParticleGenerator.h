@@ -11,9 +11,8 @@ protected:
 	normal_distribution<float>* posY;
 	normal_distribution<float>* posZ;
 
-
 public:
-	GaussianParticleGenerator(string n, Particle* model, Vector3 vel, float prob, bool up = true);
+	GaussianParticleGenerator(string n, Particle* model, Vector3 vel, float prob, bool up = true, Vector3 var_pos = Vector3(1));
 	virtual ~GaussianParticleGenerator();
 
 	// Metodos abstractos

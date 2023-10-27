@@ -1,7 +1,7 @@
 #include "UniformParticleGenerator.h"
 
-UniformParticleGenerator::UniformParticleGenerator(string n, Particle* model, Vector3 var, float pro, bool up)
-	: ParticleGenerator(n, model, var, pro, up) {
+UniformParticleGenerator::UniformParticleGenerator(string n, Particle* model, Vector3 var, float pro, bool up, Vector3 varP)
+	: ParticleGenerator(n, model, var, pro, up, varP) {
 	// Asignamos valores al intervalo de velocidad
 	assignVel();
 	// Si las partículas pueden crearse desde mas de un punto
@@ -41,7 +41,7 @@ void UniformParticleGenerator::assignVel() {
 
 
 void UniformParticleGenerator::assignPos() {
-	posX = new uniform_real_distribution<float>(mean_pos.x - meanVar.x * 2, mean_pos.x + meanVar.x / 2.0f);
-	posY = new uniform_real_distribution<float>(mean_pos.y - meanVar.y * 2, mean_pos.y + meanVar.y / 2.0f);
-	posZ = new uniform_real_distribution<float>(mean_pos.z - meanVar.z * 2, mean_pos.z + meanVar.z / 2.0f);
+	posX = new uniform_real_distribution<float>(mean_pos.x - varPos.x, mean_pos.x + varPos.x);
+	posY = new uniform_real_distribution<float>(mean_pos.y - varPos.y, mean_pos.y + varPos.y);
+	posZ = new uniform_real_distribution<float>(mean_pos.z - varPos.z, mean_pos.z + varPos.z);
 }

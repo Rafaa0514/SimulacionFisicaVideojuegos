@@ -5,16 +5,18 @@
 // Posicion inicial, Velocidad inicial, tamaño inicial, color y tiempo de vida
 
 const Vector3 GLOBAL_GRAVITY = Vector3(0, -10, 0);
-const float VERTICAL_LIMIT = -50.0f;
+const float VERTICAL_LIMIT = -200.0f;
 
 
-enum Colors { RED, BLUE, YELLOW, GREEN };
+enum Colors { RED, BLUE, YELLOW, GREEN, WHITE, BLACK };
 
 const std::vector<Vector4> colores = {
 	Vector4(255, 0, 0, 1),
 	Vector4(0, 255, 255, 1),
 	Vector4(255, 255, 0, 1),
-	Vector4(0, 255, 0, 1)
+	Vector4(0, 255, 0, 1),
+	Vector4(255, 255, 255, 1),
+	Vector4(0, 0, 0, 1)
 };
 
 class Particle {
@@ -24,15 +26,14 @@ protected:
 	Vector3 acceleration;
 	float damping;
 
-	float lifeTime;
-	double startTime;
+	double lifeTime;
 
 	physx::PxTransform pose;
 	RenderItem* renderItem;
 	float radious;
 
 public:
-	Particle(Vector3 pos, Vector3 vel, Vector3 acc, float rad, Vector4 color, float lt, float dp = 0.998f);
+	Particle(Vector3 pos, Vector3 vel, Vector3 acc, float rad, Vector4 color, double lt, float dp = 0.998f);
 	virtual ~Particle();
 
 	virtual bool integrate(double t);
@@ -45,7 +46,7 @@ public:
 	float getRadious() { return radious; }
 
 	// Setters
-	void setLifeTime(float const& lt) { lifeTime = lt; }
+	void setLifeTime(double const& lt) { lifeTime = lt; }
 	void setPosition(Vector3 const& p) { pose.p = p; }
 
 	virtual Particle* clone() const;
