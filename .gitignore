@@ -42,6 +42,8 @@ Practica1/debug/**
 /Practica1/.vs/game/**
 Practica2/debug/**
 /Practica2/.vs/game/**
+Practica3/debug/**
+/Practica3/.vs/game/**
 
 # Zip files
 *.zip
