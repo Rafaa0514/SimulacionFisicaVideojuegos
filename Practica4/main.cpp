@@ -102,8 +102,8 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	{
 	//case 'B': break;
 	//case ' ':	break;
-		case 'G': pSys->showGravityForce(); break;
-		case 'H': pSys->showWindForce(); break;
+		case 'G': pSys->showAnchoredSpringForce(); break;
+		case 'H': pSys->showSpringForce(); break;
 		case 'J': pSys->showTornadoForce(); break;
 		case 'K': pSys->showExplosionForce(); break;
 		case ' ': pSys->clear(); break;

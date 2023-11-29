@@ -6,7 +6,6 @@ ParticleSystem::ParticleSystem() : fgs() {
 	currentModel = nullptr;
 	fts = NONE;
 
-	showAnchoredSpringForce();
 }
 
 ParticleSystem::~ParticleSystem() {
@@ -167,7 +166,28 @@ void ParticleSystem::createExplosionForce() {
 #pragma region Forces Practica4
 
 void ParticleSystem::showSpringForce() {
-	//fgs.push_back(new SpringGenerator(1000, 15));
+	if (fts == SPRI) return;
+	if (fts != NONE) clear();
+	fts = SPRI;
+	particlesLimit = -1;
+
+	bb = new BoundingBox(Vector3(0, 0, 0), Vector3(300, 100, 300));
+	list<Particle*> parts;
+	Particle* part1 = new Particle(Vector3(10, 0, 0), Vector3(0), 3, 1, colores[WHITE], 100, bb);
+	Particle* part2 = new Particle(Vector3(-10, 0, 0), Vector3(0), 3, 1, colores[WHITE], 100, bb);
+	parts.push_back(part1); parts.push_back(part2);
+
+	float randK = (rand() % 10) + 1;
+	SpringGenerator* sg1 = new SpringGenerator(randK, 40, part2);
+	SpringGenerator* sg2 = new SpringGenerator(randK, 40, part1);
+	fgs.push_back(sg1); fgs.push_back(sg2);
+	GravityGenerator* gg = new GravityGenerator(GLOBAL_GRAVITY / 5, Vector3(0), Vector3(300));
+	fgs.push_back(gg);
+
+	myParticles.splice(myParticles.end(), parts);
+	pfr->addRegistry(sg1, part1);
+	pfr->addRegistry(sg2, part2);
+	pfr->addRegistry(gg, myParticles);
 }
 
 void ParticleSystem::showAnchoredSpringForce() {
@@ -191,6 +211,10 @@ void ParticleSystem::showAnchoredSpringForce() {
 
 	myParticles.splice(myParticles.end(), parts);
 	pfr->addRegistry(fgs, myParticles);
+}
+
+void ParticleSystem::showBouyancyForce() {
+
 }
 
 #pragma endregion
