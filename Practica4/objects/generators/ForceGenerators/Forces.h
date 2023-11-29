@@ -71,7 +71,7 @@ protected:
 public:
 	AnchoredSpringGenerator(double _k, double rl, Vector3 p, string name = "ANCH", double d = -1)
 		: k(_k), r_length(rl), point(p), ForceGenerator(name, d, p, Vector3(1)), pose(p),
-		renderItem(new RenderItem(CreateShape(physx::PxBoxGeometry(Vector3(5,5,5))), &pose, colores[BLACK])) {}
+		renderItem(new RenderItem(CreateShape(physx::PxBoxGeometry(Vector3(1))), &pose, colores[BLACK])) {}
 	virtual bool updateForce(Particle* p);
 	virtual ~AnchoredSpringGenerator() { renderItem->release(); renderItem = nullptr; }
 };

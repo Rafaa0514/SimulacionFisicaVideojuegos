@@ -6,8 +6,7 @@ ParticleSystem::ParticleSystem() : fgs() {
 	currentModel = nullptr;
 	fts = NONE;
 
-	//fgs.push_back(new TornadoGenerator(0.5, 1, 0.1, Vector3(0, 50, 0), Vector3(20,-30,20)));
-	//fgs.push_back(new ExplosionGenerator(100, 500, 0.125, Vector3(0), Vector3(0), Vector3(1000), 0.5));
+	showAnchoredSpringForce();
 }
 
 ParticleSystem::~ParticleSystem() {
@@ -88,6 +87,8 @@ void ParticleSystem::updateForcesTime(double t) {
 	}
 }
 
+#pragma region Forces Practica3
+
 void ParticleSystem::showGravityForce() {
 	if (fts == GRAV) return;
 	if (fts != NONE) clear();
@@ -160,6 +161,39 @@ void ParticleSystem::createExplosionForce() {
 	fgs.push_back(new ExplosionGenerator(1000, 5000, 3, Vector3(0, 60, 0), 12));
 	pfr->addRegistry(fgs, myParticles);
 }
+
+#pragma endregion
+
+#pragma region Forces Practica4
+
+void ParticleSystem::showSpringForce() {
+	//fgs.push_back(new SpringGenerator(1000, 15));
+}
+
+void ParticleSystem::showAnchoredSpringForce() {
+	if (fts == ANCH) return;
+	if (fts != NONE) clear();
+	fts = ANCH;
+	particlesLimit = -1;
+
+	bb = new BoundingBox(Vector3(0, 0, 0), Vector3(300, 100, 300));
+
+	list<Particle*> parts;
+	Particle* part1 = new Particle(Vector3(-6, 0, 8), Vector3(0), 2, 0.5, colores[RED], 100, bb);
+	Particle* part2 = new Particle(Vector3(1, 0, 0), Vector3(0), 2, 4, colores[BLUE], 100, bb);
+	Particle* part3 = new Particle(Vector3(-5, 0, 0), Vector3(0), 2, 2, colores[GREEN], 100, bb);
+	Particle* part4 = new Particle(Vector3(6, 0, -8), Vector3(0), 2, 1, colores[YELLOW], 100, bb);
+
+	parts.push_back(part1); parts.push_back(part2); parts.push_back(part3); parts.push_back(part4);
+
+	fgs.push_back(new AnchoredSpringGenerator((rand() % 10) + 1, 20, Vector3(0)));
+	fgs.push_back(new GravityGenerator(GLOBAL_GRAVITY, Vector3(0), Vector3(300)));
+
+	myParticles.splice(myParticles.end(), parts);
+	pfr->addRegistry(fgs, myParticles);
+}
+
+#pragma endregion
 
 void ParticleSystem::createParticleGenerator(Particle* model, Vector3 var_v, double prob, bool up, Vector3 var_p) {
 	int type = rand() % 2;

@@ -6,7 +6,7 @@
 #include <list>
 #include <vector>
 
-enum ForceToShow { NONE, GRAV, WIND, TORN, EXPL, ALL };
+enum ForceToShow { NONE, GRAV, WIND, TORN, EXPL, ANCH, SPRI, BOUY, ALL };
 
 class ParticleSystem {
 protected:
@@ -47,6 +47,11 @@ public:
 	void showTornadoForce();
 	void showExplosionForce();
 	void createExplosionForce();
+
+	// Para los casos de muelles
+	void showSpringForce();
+	void showAnchoredSpringForce();
+	void showBouyancyForce();
 
 	void createParticleGenerator(Particle* model, Vector3 var_v, double prob, bool up = true, Vector3 var_p = Vector3(1));
 
