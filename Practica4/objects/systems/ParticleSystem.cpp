@@ -5,7 +5,7 @@ ParticleSystem::ParticleSystem() : fgs() {
 	bb = new BoundingBox(Vector3(0), Vector3(0));
 	currentModel = nullptr;
 	fts = NONE;
-
+	existGrav = false;
 }
 
 ParticleSystem::~ParticleSystem() {
@@ -92,6 +92,7 @@ void ParticleSystem::showGravityForce() {
 	if (fts == GRAV) return;
 	if (fts != NONE) clear();
 	fts = GRAV;
+	existGrav = true;
 	particlesLimit = 500;
 	bb = new BoundingBox(Vector3(0, 0, 0), Vector3(300, 100, 300));
 
@@ -106,6 +107,7 @@ void ParticleSystem::showWindForce() {
 	if (fts != NONE) clear();
 
 	fts = WIND;
+	existGrav = true;
 	particlesLimit = 250;
 	bb = new BoundingBox(Vector3(-100, 200, 0), Vector3(150, 300, 150));
 
@@ -120,6 +122,7 @@ void ParticleSystem::showTornadoForce() {
 	if (fts == TORN && !exploded) return;
 	if (fts != NONE) clear();
 	fts = TORN;
+	existGrav = true;
 	particlesLimit = -1;
 	bb = new BoundingBox(Vector3(0), Vector3(400));
 
@@ -173,21 +176,18 @@ void ParticleSystem::showSpringForce() {
 
 	bb = new BoundingBox(Vector3(0, 0, 0), Vector3(300, 100, 300));
 	list<Particle*> parts;
-	Particle* part1 = new Particle(Vector3(10, 0, 0), Vector3(0), 3, 1, colores[WHITE], 100, bb);
-	Particle* part2 = new Particle(Vector3(-10, 0, 0), Vector3(0), 3, 1, colores[WHITE], 100, bb);
+	Particle* part1 = new Particle(Vector3(20, 0, 0), Vector3(0), 3, 1, colores[BLACK], 100, bb);
+	Particle* part2 = new Particle(Vector3(-20, 0, 0), Vector3(0), 3, 1, colores[WHITE], 100, bb);
 	parts.push_back(part1); parts.push_back(part2);
 
 	float randK = (rand() % 10) + 1;
-	SpringGenerator* sg1 = new SpringGenerator(randK, 40, part2);
-	SpringGenerator* sg2 = new SpringGenerator(randK, 40, part1);
+	SpringGenerator* sg1 = new SpringGenerator(randK, 30, part2);
+	SpringGenerator* sg2 = new SpringGenerator(randK, 30, part1);
 	fgs.push_back(sg1); fgs.push_back(sg2);
-	GravityGenerator* gg = new GravityGenerator(GLOBAL_GRAVITY / 5, Vector3(0), Vector3(300));
-	fgs.push_back(gg);
 
 	myParticles.splice(myParticles.end(), parts);
 	pfr->addRegistry(sg1, part1);
 	pfr->addRegistry(sg2, part2);
-	pfr->addRegistry(gg, myParticles);
 }
 
 void ParticleSystem::showAnchoredSpringForce() {
@@ -207,14 +207,97 @@ void ParticleSystem::showAnchoredSpringForce() {
 	parts.push_back(part1); parts.push_back(part2); parts.push_back(part3); parts.push_back(part4);
 
 	fgs.push_back(new AnchoredSpringGenerator((rand() % 10) + 1, 20, Vector3(0)));
-	fgs.push_back(new GravityGenerator(GLOBAL_GRAVITY, Vector3(0), Vector3(300)));
 
 	myParticles.splice(myParticles.end(), parts);
 	pfr->addRegistry(fgs, myParticles);
 }
 
-void ParticleSystem::showBouyancyForce() {
+void ParticleSystem::showElastic() {
+	if (fts != NONE) clear();
+	fts = ELAS;
+	particlesLimit = -1;
 
+	bb = new BoundingBox(Vector3(0, 0, 0), Vector3(300, 300, 300));
+	list<Particle*> parts;
+	Particle* part1 = new Particle(Vector3(20, 0, 0), Vector3(0), 3, 1, colores[BLACK], -1, bb);
+	Particle* part2 = new Particle(Vector3(-20, 0, 0), Vector3(0), 3, 1, colores[WHITE], -1, bb);
+	parts.push_back(part1); parts.push_back(part2);
+
+	float randK = (rand() % 10) + 1;
+	SpringGenerator* sg1 = new SpringGenerator(randK, 30, part2, true);
+	SpringGenerator* sg2 = new SpringGenerator(randK, 30, part1, true);
+	fgs.push_back(sg1); fgs.push_back(sg2);
+
+	myParticles.splice(myParticles.end(), parts);
+	pfr->addRegistry(sg1, part1);
+	pfr->addRegistry(sg2, part2);
+}
+
+void ParticleSystem::showBouyancyForce() {
+	if (fts == BOUY) return;
+	if (fts != NONE) clear();
+	fts = BOUY;
+	existGrav = true;
+	particlesLimit = -1;
+
+	bb = new BoundingBox(Vector3(0, 0, 0), Vector3(300, 100, 300));
+
+	floutingBox = new BoxParticle(Vector3(0, 70, 0), Vector3(0), 1, 200, colores[RED], -1, bb);
+	myParticles.push_back(floutingBox);
+
+	fgs.push_back(new BouyancyForceGenerator(2, 8, 1000, Vector3(0, 50, 0), Vector3(20, 100, 20)));
+	fgs.push_back(new GravityGenerator(GLOBAL_GRAVITY, Vector3(0), Vector3(300)));
+
+	pfr->addRegistry(fgs, myParticles);
+}
+
+void ParticleSystem::addGravity() {
+	if (!existGrav) {
+		GravityGenerator* gg = new GravityGenerator(GLOBAL_GRAVITY, Vector3(0), Vector3(500));
+		fgs.push_back(gg);
+		pfr->addRegistry(gg, myParticles);
+		existGrav = true;
+	}
+}
+
+void ParticleSystem::changeK(bool increase) {
+	if (fts == SPRI || fts == ANCH || fts == ELAS) {
+		for (auto it = fgs.begin(); it != fgs.end(); it++) {
+			AnchoredSpringGenerator* cfg = static_cast<AnchoredSpringGenerator*>(*it);
+			if (cfg != nullptr) {
+				if (increase) cfg->setK(cfg->getK() + 1);
+				else if(cfg->getK() > 1) cfg->setK(cfg->getK() - 1);
+			}
+		}
+	}
+}
+
+void ParticleSystem::changeRL(bool increase) {
+	if (fts == SPRI || fts == ANCH || fts == ELAS) {
+		for (auto it = fgs.begin(); it != fgs.end(); it++) {
+			AnchoredSpringGenerator* cfg = static_cast<AnchoredSpringGenerator*>(*it);
+			if (cfg != nullptr) {
+				if (increase) cfg->setRL(cfg->getRL() + 1);
+				else if (cfg->getRL() > 1) cfg->setRL(cfg->getRL() - 1);
+			}
+		}
+	}
+}
+
+void ParticleSystem::changeDimensions(bool increase) {
+	if (fts == BOUY) {
+		if (increase) floutingBox->changeDimensions(floutingBox->getRadious() + 0.5);
+		else if (floutingBox->getRadious() > 0.5) floutingBox->changeDimensions(floutingBox->getRadious() - 0.5);
+		cout << "\n- Nuevas dimensiones de la caja: " << floutingBox->getRadious() * 2;
+	}
+}
+
+void ParticleSystem::changeMass(bool increase) {
+	if (fts == BOUY) {
+		if (increase) floutingBox->setMass(floutingBox->getMass() + 10);
+		else if (floutingBox->getMass() > 10) floutingBox->setMass(floutingBox->getMass() - 10);
+		cout << "\n- Nueva masa de la caja: " << floutingBox->getMass();
+	}
 }
 
 #pragma endregion
@@ -232,6 +315,8 @@ void ParticleSystem::createParticleGenerator(Particle* model, Vector3 var_v, dou
 
 void ParticleSystem::clear() {
 	fts = NONE;
+	existGrav = false;
+	floutingBox = nullptr;
 	delete currentModel; currentModel = nullptr;
 	delete bb; bb = nullptr;
 	

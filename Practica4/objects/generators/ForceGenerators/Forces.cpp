@@ -55,21 +55,27 @@ bool AnchoredSpringGenerator::updateForce(Particle* p) {
 }
 
 bool SpringGenerator::updateForce(Particle* p) {
+	if (elastic) {
+		double distance = (p->getPos() - other->getPos()).magnitude();
+		if (distance < r_length) {  return true; }
+	}
 	point = other->getPos();
 	return AnchoredSpringGenerator::updateForce(p);
 }
 
 bool BouyancyForceGenerator::updateForce(Particle* p) {
-	float h = p->getPos().y;
-	float h0 = liquid_particle->getPos().y;
+	if (!bb->isInside(p->getPos())) return false;
 
+	float h = p->getPos().y;
+	float h0 = fluidLimit->transform->p.y;
 	Vector3 f(0, 0, 0);
 	float immersed = 0.0;
+
 	if (h - h0 > height * 0.5) immersed = 0.0;
 	else if (h0 - h > height * 0.5) immersed = 1.0;
 	else immersed = (h0 - h) / height + 0.5;
-
-	f.y = liquid_density * volume * immersed * GLOBAL_GRAVITY.y;
+	volume = pow(p->getRadious() * 2, 3);
+	f.y = liquid_density * volume * immersed * -GLOBAL_GRAVITY.y;
 	p->addForce(f);
 	return true;
 }

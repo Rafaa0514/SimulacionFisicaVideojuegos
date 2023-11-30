@@ -1,6 +1,7 @@
 #pragma once
 #include "../../RenderUtils.hpp"
 #include "BoundingBox.h"
+#include <iostream>
 
 // Parametros de la particula
 // Posicion inicial, Velocidad inicial, tamaño inicial, color y tiempo de vida
@@ -32,6 +33,7 @@ protected:
 	physx::PxTransform pose;
 	RenderItem* renderItem;
 	float radious;
+	Vector4 col;
 
 	Vector3 force;
 	double inv_mass, mass;
@@ -39,7 +41,7 @@ protected:
 	BoundingBox* bb;
 
 public:
-	Particle(Vector3 pos, Vector3 vel, float rad, double m, Vector4 color, 
+	Particle(Vector3 pos, Vector3 vel, float rad, double m, Vector4 color,
 		double lt, BoundingBox* _bb, float dp = 0.998f);
 	virtual ~Particle();
 
@@ -55,6 +57,7 @@ public:
 	double getInvMass()	{ return inv_mass; }
 
 	// Setters
+	void setVel(Vector3 v) { vel = v; }
 	void setLifeTime(double const& lt)	{ lifeTime = lt; }
 	void setPosition(Vector3 const& p)	{ pose.p = p; }
 	void setMass(double m);

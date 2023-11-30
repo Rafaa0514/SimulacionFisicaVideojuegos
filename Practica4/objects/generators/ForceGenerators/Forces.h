@@ -1,5 +1,7 @@
 #pragma once
+#define _USE_MATH_DEFINES
 #include "ForceGenerator.h"
+#include <cmath>
 
 // ----------GENERADOR DE GRAVEDAD----------
 class GravityGenerator : public ForceGenerator {
@@ -74,24 +76,36 @@ public:
 		renderItem(new RenderItem(CreateShape(physx::PxBoxGeometry(Vector3(1))), &pose, colores[BLACK])) {}
 	virtual bool updateForce(Particle* p);
 	virtual ~AnchoredSpringGenerator() { renderItem->release(); renderItem = nullptr; }
+
+	// Getters
+	double getK() { return k; }
+	double getRL() { return r_length; }
+	// Setters
+	void setK(double _k) { k = _k; };
+	void setRL(double _rl) { r_length = _rl; }
 };
 
 class SpringGenerator : public AnchoredSpringGenerator {
 protected:
 	Particle* other;
+	bool elastic;
 public:
-	SpringGenerator(double _k, double rl, Particle* o) : AnchoredSpringGenerator(_k, rl, o->getPos()), other(o) {}
+	SpringGenerator(double _k, double rl, Particle* o, bool e = false) : 
+		AnchoredSpringGenerator(_k, rl, o->getPos()), other(o), elastic(e) {}
 	virtual bool updateForce(Particle* p);
 };
 
 //----------GENERADOR DE FLOTACION----------
 class BouyancyForceGenerator : public ForceGenerator {
 protected:
-	float height, volume, liquid_density, gravity = 9.8;
-	Particle* liquid_particle;
+	float height, volume, liquid_density;
+	RenderItem* fluidLimit;
+	physx::PxTransform pose;
+
 public:
 	BouyancyForceGenerator(float h, float V, float d, Vector3 bbP, Vector3 bbS, double dur = -1) : 
-		ForceGenerator("FLOT", dur, bbP, bbS), height(h), volume(V), liquid_density(d) {}
+		ForceGenerator("FLOT", dur, bbP, bbS), height(h), volume(V), liquid_density(d), pose(bbP),
+		fluidLimit(new RenderItem(CreateShape(physx::PxBoxGeometry(Vector3(bbS.x, 0.1, bbS.z))), &pose, colores[BLUE])) {}
 
 	virtual bool updateForce(Particle* p);
 

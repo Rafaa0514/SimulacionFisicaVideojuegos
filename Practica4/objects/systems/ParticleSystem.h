@@ -6,7 +6,7 @@
 #include <list>
 #include <vector>
 
-enum ForceToShow { NONE, GRAV, WIND, TORN, EXPL, ANCH, SPRI, BOUY, ALL };
+enum ForceToShow { NONE, GRAV, WIND, TORN, EXPL, ANCH, SPRI, ELAS, BOUY, ALL };
 
 class ParticleSystem {
 protected:
@@ -28,6 +28,8 @@ protected:
 	ForceToShow fts;
 	double timer;
 	bool exploded;
+	bool existGrav;
+	BoxParticle* floutingBox;
 
 public:
 	ParticleSystem();
@@ -51,7 +53,14 @@ public:
 	// Para los casos de muelles
 	void showSpringForce();
 	void showAnchoredSpringForce();
+	void showElastic();
 	void showBouyancyForce();
+
+	void addGravity();
+	void changeK(bool increase);
+	void changeRL(bool increase);
+	void changeDimensions(bool increase);
+	void changeMass(bool increase);
 
 	void createParticleGenerator(Particle* model, Vector3 var_v, double prob, bool up = true, Vector3 var_p = Vector3(1));
 
