@@ -293,8 +293,8 @@ void ParticleSystem::changeDimensions(bool increase) {
 
 void ParticleSystem::changeMass(bool increase) {
 	if (fts == BOUY) {
-		if (increase) floutingBox->setMass(floutingBox->getMass() + 10);
-		else if (floutingBox->getMass() > 10) floutingBox->setMass(floutingBox->getMass() - 10);
+		if (increase) floutingBox->setMass(floutingBox->getMass() + 100);
+		else if (floutingBox->getMass() > 100) floutingBox->setMass(floutingBox->getMass() - 100);
 		cout << "\n- Nueva masa de la caja: " << floutingBox->getMass();
 	}
 }
