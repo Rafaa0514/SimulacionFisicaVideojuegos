@@ -91,7 +91,9 @@ protected:
 	bool elastic;
 public:
 	SpringGenerator(double _k, double rl, Particle* o, bool e = false) : 
-		AnchoredSpringGenerator(_k, rl, o->getPos()), other(o), elastic(e) {}
+		AnchoredSpringGenerator(_k, rl, o->getPos()), other(o), elastic(e) {
+		renderItem->release();
+	}
 	virtual bool updateForce(Particle* p);
 };
 

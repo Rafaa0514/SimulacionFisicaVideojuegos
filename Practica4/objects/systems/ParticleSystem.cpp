@@ -5,7 +5,7 @@ ParticleSystem::ParticleSystem() : fgs() {
 	bb = new BoundingBox(Vector3(0), Vector3(0));
 	currentModel = nullptr;
 	fts = NONE;
-	existGrav = false;
+	existGrav = false; existWind = false;
 }
 
 ParticleSystem::~ParticleSystem() {
@@ -108,6 +108,7 @@ void ParticleSystem::showWindForce() {
 
 	fts = WIND;
 	existGrav = true;
+	existWind = true;
 	particlesLimit = 250;
 	bb = new BoundingBox(Vector3(-100, 200, 0), Vector3(150, 300, 150));
 
@@ -123,6 +124,7 @@ void ParticleSystem::showTornadoForce() {
 	if (fts != NONE) clear();
 	fts = TORN;
 	existGrav = true;
+	existWind = true;
 	particlesLimit = -1;
 	bb = new BoundingBox(Vector3(0), Vector3(400));
 
@@ -219,13 +221,13 @@ void ParticleSystem::showElastic() {
 
 	bb = new BoundingBox(Vector3(0, 0, 0), Vector3(300, 300, 300));
 	list<Particle*> parts;
-	Particle* part1 = new Particle(Vector3(20, 0, 0), Vector3(0), 3, 1, colores[BLACK], -1, bb);
-	Particle* part2 = new Particle(Vector3(-20, 0, 0), Vector3(0), 3, 1, colores[WHITE], -1, bb);
+	Particle* part1 = new Particle(Vector3(50, 0, 0), Vector3(0), 3, 1, colores[BLACK], -1, bb);
+	Particle* part2 = new Particle(Vector3(-50, 0, 0), Vector3(0), 3, 1, colores[WHITE], -1, bb);
 	parts.push_back(part1); parts.push_back(part2);
 
 	float randK = (rand() % 10) + 1;
-	SpringGenerator* sg1 = new SpringGenerator(randK, 30, part2, true);
-	SpringGenerator* sg2 = new SpringGenerator(randK, 30, part1, true);
+	SpringGenerator* sg1 = new SpringGenerator(randK, 90, part2, true);
+	SpringGenerator* sg2 = new SpringGenerator(randK, 90, part1, true);
 	fgs.push_back(sg1); fgs.push_back(sg2);
 
 	myParticles.splice(myParticles.end(), parts);
@@ -260,6 +262,15 @@ void ParticleSystem::addGravity() {
 	}
 }
 
+void ParticleSystem::addWind() {
+	if (!existWind) {
+		WindGenerator* wg = new WindGenerator(1, 0.1, Vector3(10, 0, 0), Vector3(-20, 0, -20), Vector3(200, 100, 200));
+		fgs.push_back(wg);
+		pfr->addRegistry(wg, myParticles);
+		existWind = true;
+	}
+}
+
 void ParticleSystem::changeK(bool increase) {
 	if (fts == SPRI || fts == ANCH || fts == ELAS) {
 		for (auto it = fgs.begin(); it != fgs.end(); it++) {
@@ -267,18 +278,6 @@ void ParticleSystem::changeK(bool increase) {
 			if (cfg != nullptr) {
 				if (increase) cfg->setK(cfg->getK() + 1);
 				else if(cfg->getK() > 1) cfg->setK(cfg->getK() - 1);
-			}
-		}
-	}
-}
-
-void ParticleSystem::changeRL(bool increase) {
-	if (fts == SPRI || fts == ANCH || fts == ELAS) {
-		for (auto it = fgs.begin(); it != fgs.end(); it++) {
-			AnchoredSpringGenerator* cfg = static_cast<AnchoredSpringGenerator*>(*it);
-			if (cfg != nullptr) {
-				if (increase) cfg->setRL(cfg->getRL() + 1);
-				else if (cfg->getRL() > 1) cfg->setRL(cfg->getRL() - 1);
 			}
 		}
 	}
@@ -316,6 +315,7 @@ void ParticleSystem::createParticleGenerator(Particle* model, Vector3 var_v, dou
 void ParticleSystem::clear() {
 	fts = NONE;
 	existGrav = false;
+	existWind = false;
 	floutingBox = nullptr;
 	delete currentModel; currentModel = nullptr;
 	delete bb; bb = nullptr;

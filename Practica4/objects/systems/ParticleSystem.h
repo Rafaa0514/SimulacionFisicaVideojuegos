@@ -28,7 +28,7 @@ protected:
 	ForceToShow fts;
 	double timer;
 	bool exploded;
-	bool existGrav;
+	bool existGrav, existWind;
 	BoxParticle* floutingBox;
 
 public:
@@ -57,8 +57,8 @@ public:
 	void showBouyancyForce();
 
 	void addGravity();
+	void addWind();
 	void changeK(bool increase);
-	void changeRL(bool increase);
 	void changeDimensions(bool increase);
 	void changeMass(bool increase);
 
