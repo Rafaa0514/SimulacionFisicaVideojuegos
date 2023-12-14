@@ -1,6 +1,6 @@
 #include "RigidBody.h"
 
-RigidBody::RigidBody(PxPhysics* gPx, PxScene* scene, Vector3 pos, Vector3 s, Vector4 col, bool mov, double m, float lt, BoundingBox* _bb) : 
+RigidBody::RigidBody(PxPhysics* gPx, PxScene* scene, Vector3 pos, Vector3 s, Vector3 vel, Vector4 col, bool mov, double m, float lt, BoundingBox* _bb) : 
 	PhysicActor(pos, m, lt, _bb), scale(s), color(col), movable(mov) {
 	shape = CreateShape(PxBoxGeometry(scale));
 
@@ -9,6 +9,10 @@ RigidBody::RigidBody(PxPhysics* gPx, PxScene* scene, Vector3 pos, Vector3 s, Vec
 		bDynamic->attachShape(*shape);
 		renderItem = new RenderItem(shape, bDynamic, color);
 		scene->addActor(*bDynamic);
+
+		bDynamic->setMass(m);
+		bDynamic->setLinearVelocity(Vector3(vel));
+		//PxRigidBodyExt::setMassAndUpdateInertia(static_cast<*PxRigidBody>(bDynamic), PxReal(mass));
 	}
 	else {
 		bStatic = gPx->createRigidStatic(pose);
@@ -36,5 +40,5 @@ float RigidBody::getHeight() {
 }
 
 PhysicActor* RigidBody::clone(PxPhysics* gPx, PxScene* scene, Vector3 pos, Vector3 vel, float lt, BoundingBox* _bb) {
-	return new RigidBody(gPx, scene, pos, vel, color, movable, mass, lt, _bb);
+	return new RigidBody(gPx, scene, pos, scale, vel, color, movable, mass, lt, _bb);
 }

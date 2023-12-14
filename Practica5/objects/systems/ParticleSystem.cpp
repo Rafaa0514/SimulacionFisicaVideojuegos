@@ -2,10 +2,13 @@
 
 ParticleSystem::ParticleSystem(PxPhysics* g, PxScene* s) : fgs(), gPx(g), scene(s) {
 	afr = new ActorForceRegistry();
-	bb = new BoundingBox(Vector3(0), Vector3(0));
+	bb = new BoundingBox(Vector3(0), Vector3(500));
 	currentModel = nullptr;
 	fts = NONE;
 	existGrav = false; existWind = false;
+
+	currentModel = new RigidBody(gPx, scene, Vector3(0), Vector3(1), Vector3(0), colores[BLUE], true, 2, 3, bb);
+	createActorGenerator(currentModel, Vector3(0.1, 0.1, 0.1), 0.7);
 }
 
 ParticleSystem::~ParticleSystem() {
