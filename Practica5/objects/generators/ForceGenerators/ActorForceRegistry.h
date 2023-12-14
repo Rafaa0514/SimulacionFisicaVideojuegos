@@ -6,9 +6,9 @@
 using namespace std;
 using ForceGenerators = std::list<ForceGenerator*>;
 
-typedef pair<Particle*, ForceGenerator*> FRPair;
+typedef pair<PhysicActor*, ForceGenerator*> FRPair;
 
-class ParticleForceRegistry : public multimap<Particle*, ForceGenerator*> {
+class ActorForceRegistry : public multimap<PhysicActor*, ForceGenerator*> {
 public:
 	void updateForces() {
 		for (auto it = begin(); it != end();) {
@@ -17,17 +17,17 @@ public:
 		}
 	}
 
-	void addRegistry(ForceGenerator* fg, Particle* p) {
+	void addRegistry(ForceGenerator* fg, PhysicActor* p) {
 		insert({ p, fg });
 	}
 
-	void addRegistry(ForceGenerator* fg, const std::list<Particle*>& ps) {
+	void addRegistry(ForceGenerator* fg, const std::list<PhysicActor*>& ps) {
 		for (auto it = ps.begin(); it != ps.end(); it++) {
 			insert({ *it, fg });
 		}
 	}
 
-	void addRegistry(ForceGenerators fgs, const std::list<Particle*>& ps) {
+	void addRegistry(ForceGenerators fgs, const std::list<PhysicActor*>& ps) {
 		for (auto it1 = fgs.begin(); it1 != fgs.end(); it1++) {
 			for (auto it2 = ps.begin(); it2 != ps.end(); it2++) {
 				insert({ *it2, *it1 });
@@ -35,18 +35,18 @@ public:
 		}
 	}
 
-	void addRegistry(ForceGenerators fgs, Particle* p) {
+	void addRegistry(ForceGenerators fgs, PhysicActor* p) {
 		for (auto it = fgs.begin(); it != fgs.end(); it++) {
 			insert({ p, *it});
 		}
 	}
 
-	void deleteParticleRegistry(Particle* p) {
+	void deleteActorRegistry(PhysicActor* p) {
 		erase(p);
 	}
 
-	void deleteAllParticlesRegistry(list<Particle*> parts) {
-		for (Particle* p : parts) erase(p);
+	void deleteAllActorsRegistry(list<PhysicActor*> parts) {
+		for (PhysicActor* p : parts) erase(p);
 	}
 
 	void deleteForceRegistry(ForceGenerator* fg) {

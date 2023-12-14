@@ -1,6 +1,6 @@
 #include "FireworkGenerator.h"
 
-FireworkGenerator::FireworkGenerator(string n, ParticleForceRegistry* r, ForceGenerators& _fgs, Vector3 var, bool up) :
+FireworkGenerator::FireworkGenerator(string n, ActorForceRegistry* r, ForceGenerators& _fgs, Vector3 var, bool up) :
 	name(n), mean_var(var), uniquePoint(up), rg(rd()), pfr(r), fgs(_fgs) {
 	
 }
@@ -10,7 +10,7 @@ FireworkGenerator::~FireworkGenerator() {
 }
 
 list<Firework*> FireworkGenerator::generateFireworks(Firework* f) {
-	assignVel(f->getVel());
+	assignVel(f->getVelocity());
 	list<Firework*> newFs;
 	double newLT = calculateLT(f->getLifetime(), f->getGeneration());
 	for (int i = 0; i < f->getNumberSons(); i++) {

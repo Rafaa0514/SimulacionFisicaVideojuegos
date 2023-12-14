@@ -10,7 +10,7 @@ protected:
 public:
 	GravityGenerator(Vector3 G, Vector3 bbC, Vector3 bbS, double d = -1, string n = "GRAV") : 
 		ForceGenerator(n, d, bbC, bbS), grav(G) {}
-	virtual bool updateForce(Particle* p);
+	virtual bool updateForce(PhysicActor* p);
 	void setGravity(const Vector3& g) { grav = g; }
 };
 
@@ -22,7 +22,7 @@ protected:
 public:
 	WindGenerator(float _k1, float _k2, Vector3 w, Vector3 bbC, Vector3 bbS, double d = -1, string n = "WIND") : 
 		ForceGenerator(n, d, bbC, bbS), k1(_k1), k2(_k2), wVel(w) {}
-	virtual bool updateForce(Particle* p);
+	virtual bool updateForce(PhysicActor* p);
 
 	void setDrag(float _k1, float _k2) { k1 = _k1; k2 = _k2; }
 	void setWindVelocity(const Vector3& w) { wVel = w; }
@@ -41,7 +41,7 @@ protected:
 public:
 	TornadoGenerator(float _k, float _k1, float _k2, Vector3 o, Vector3 w, Vector3 bbC, Vector3 bbS, double d = -1, string n = "TORN") :
 		WindGenerator(_k1, _k2, w, bbC, bbS, d, n), k(_k), origin(o) {}
-	virtual bool updateForce(Particle* p);
+	virtual bool updateForce(PhysicActor* p);
 };
 
 //----------GENERADOR DE EXPLOSIONES----------
@@ -57,7 +57,7 @@ public:
 	ExplosionGenerator(float r, float _k, float T, Vector3 c, double d = -1, string n = "EXPL") :
 		ForceGenerator(n, d, Vector3(0), Vector3(0)), rad(r), finalRad(r), k(_k), tau(T), center(c) {}
 
-	virtual bool updateForce(Particle* p);
+	virtual bool updateForce(PhysicActor* p);
 };
 
 //----------GENERADORES DE MUELLES----------
@@ -74,7 +74,7 @@ public:
 	AnchoredSpringGenerator(double _k, double rl, Vector3 p, string name = "ANCH", double d = -1)
 		: k(_k), r_length(rl), point(p), ForceGenerator(name, d, p, Vector3(1)), pose(p),
 		renderItem(new RenderItem(CreateShape(physx::PxBoxGeometry(Vector3(1))), &pose, colores[BLACK])) {}
-	virtual bool updateForce(Particle* p);
+	virtual bool updateForce(PhysicActor* p);
 	virtual ~AnchoredSpringGenerator() { renderItem->release(); renderItem = nullptr; }
 
 	// Getters
@@ -87,14 +87,14 @@ public:
 
 class SpringGenerator : public AnchoredSpringGenerator {
 protected:
-	Particle* other;
+	PhysicActor* other;
 	bool elastic;
 public:
-	SpringGenerator(double _k, double rl, Particle* o, bool e = false) : 
+	SpringGenerator(double _k, double rl, PhysicActor* o, bool e = false) :
 		AnchoredSpringGenerator(_k, rl, o->getPos()), other(o), elastic(e) {
 		renderItem->release();
 	}
-	virtual bool updateForce(Particle* p);
+	virtual bool updateForce(PhysicActor* p);
 };
 
 //----------GENERADOR DE FLOTACION----------
@@ -109,7 +109,7 @@ public:
 		ForceGenerator("FLOT", dur, bbP, bbS), height(h), volume(V), liquid_density(d), pose(bbP),
 		fluidLimit(new RenderItem(CreateShape(physx::PxBoxGeometry(Vector3(bbS.x, 0.1, bbS.z))), &pose, colores[BLUE])) {}
 
-	virtual bool updateForce(Particle* p);
+	virtual bool updateForce(PhysicActor* p);
 
 	~BouyancyForceGenerator() {}
 };

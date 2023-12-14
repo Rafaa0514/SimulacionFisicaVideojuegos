@@ -1,7 +1,7 @@
 #pragma once
-#include "ParticleGenerator.h"
+#include "ActorGenerator.h"
 
-class UniformParticleGenerator : public ParticleGenerator {
+class UniformGenerator : public ActorGenerator {
 protected:
 	uniform_real_distribution<float>* velX;
 	uniform_real_distribution<float>* velY;
@@ -13,12 +13,12 @@ protected:
 
 
 public:
-	UniformParticleGenerator(string n, Particle* model, Vector3 var, float pro, 
-		ParticleForceRegistry* r, ForceGenerators& _fgs, bool up = true, Vector3 varP = Vector3(1));
-	virtual ~UniformParticleGenerator();
+	UniformGenerator(string n, PxPhysics* g, PxScene* s, PhysicActor* model, Vector3 var, float pro,
+		ActorForceRegistry* r, ForceGenerators& _fgs, bool up = true, Vector3 varP = Vector3(1));
+	virtual ~UniformGenerator();
 
 	// Metodos abstractos
-	virtual list<Particle*> generateParticles();
+	virtual list<PhysicActor*> generateActors();
 	virtual Vector3 calculateVel();
 	virtual Vector3 calculatePos();
 

@@ -1,16 +1,11 @@
 #include "ParticleSystem.h"
 
 ParticleSystem::ParticleSystem(PxPhysics* g, PxScene* s) : fgs(), gPx(g), scene(s) {
-	pfr = new ParticleForceRegistry();
+	afr = new ActorForceRegistry();
 	bb = new BoundingBox(Vector3(0), Vector3(0));
 	currentModel = nullptr;
 	fts = NONE;
 	existGrav = false; existWind = false;
-
-	RigidBody* caja = new RigidBody(g, s, Vector3(0), Vector3(0), true, Vector3(5), colores[WHITE], 2, 0.1);
-
-	RigidBodyGenerator* rbg = new RigidBodyGenerator(g, s, "MESSI", caja, Vector3(10), 0.7, pfr, fgs);
-	particleGenerators.push_back(rbg);
 }
 
 ParticleSystem::~ParticleSystem() {
@@ -25,27 +20,28 @@ void ParticleSystem::update(double t) {
 
 	updateForcesTime(t);
 
-	// ----- PARTÍCULAS -----
-	for (ParticleGenerator* p : particleGenerators) {
-		if (myParticles.size() < particlesLimit || particlesLimit < 0) {
-			list<Particle*> prtcls = p->generateParticles();
-			if (!prtcls.empty()) myParticles.splice(myParticles.end(), prtcls);
+	// ----- ACTORES -----
+	for (ActorGenerator* p : actorsGenerators) {
+		if (myActors.size() < particlesLimit || particlesLimit < 0) {
+			list<PhysicActor*> prtcls = p->generateActors();
+			if (!prtcls.empty()) myActors.splice(myActors.end(), prtcls);
 		}
 	}
 
-	for (auto it = myParticles.begin(); it != myParticles.end(); it++) {
+	for (auto it = myActors.begin(); it != myActors.end(); it++) {
 		if (!(*it)->integrate(t)) {
-			deadParticles.push_back(it);
+			deadActors.push_back(it);
 		}
 	}
 
-	for (int i = 0; i < deadParticles.size(); i++) {
-		pfr->deleteParticleRegistry(*deadParticles[i]);
-		delete* deadParticles[i];
-		myParticles.erase(deadParticles[i]);
+	for (int i = 0; i < deadActors.size(); i++) {
+		afr->deleteActorRegistry(*deadActors[i]);
+		delete* deadActors[i];
+		myActors.erase(deadActors[i]);
 	}
-	deadParticles.clear();
+	deadActors.clear();
 
+	#pragma region Fireworks
 	// ----- FUEGOS ARTIFICIALES -----
 	for (auto it = fireworks_pool.begin(); it != fireworks_pool.end(); it++) {
 		if (!(*it)->integrate(t)) {
@@ -58,21 +54,21 @@ void ParticleSystem::update(double t) {
 			list<Firework*> fs = fireworkGen->generateFireworks(*deadFireworks[i]);
 			if (!fireworks_pool.empty()) fireworks_pool.splice(fireworks_pool.end(), fs);
 		}
-		pfr->deleteParticleRegistry(*deadFireworks[i]);
+		afr->deleteActorRegistry(*deadFireworks[i]);
 		delete* deadFireworks[i];
 		fireworks_pool.erase(deadFireworks[i]);
 	}
 	deadFireworks.clear();
+	#pragma endregion
 
-
-	pfr->updateForces();
+	afr->updateForces();
 }
 
-ParticleGenerator* ParticleSystem::getParticleGenerator(string name) {
-	auto it = particleGenerators.begin();
+ActorGenerator* ParticleSystem::getActorGenerator(string name) {
+	auto it = actorsGenerators.begin();
 	bool found = false;
 
-	while (!found && it != particleGenerators.end()) {
+	while (!found && it != actorsGenerators.end()) {
 		found = (*it)->getName() == name;
 		if (!found) it++;
 	}
@@ -83,7 +79,7 @@ ParticleGenerator* ParticleSystem::getParticleGenerator(string name) {
 void ParticleSystem::updateForcesTime(double t) {
 	for (auto it = fgs.begin(); it != fgs.end();) {
 		if (!(*it)->updateTime(t)) {
-			pfr->deleteForceRegistry(*it);
+			afr->deleteForceRegistry(*it);
 			delete* it;
 			it = fgs.erase(it);
 		}
@@ -102,7 +98,7 @@ void ParticleSystem::showGravityForce() {
 	bb = new BoundingBox(Vector3(0, 0, 0), Vector3(300, 100, 300));
 
 	currentModel = new Particle(Vector3(-50, 0, -100), Vector3(0, 50, 0), RADIOUS, 2, colores[BLUE], 5.0f, bb);
-	createParticleGenerator(currentModel, Vector3(10), 0.7);
+	createActorGenerator(currentModel, Vector3(10), 0.7);
 
 	fgs.push_back(new GravityGenerator(GLOBAL_GRAVITY, Vector3(0), Vector3(300)));
 }
@@ -118,7 +114,7 @@ void ParticleSystem::showWindForce() {
 	bb = new BoundingBox(Vector3(-100, 200, 0), Vector3(150, 300, 150));
 
 	currentModel = new Particle(Vector3(-100, 0, 0), Vector3(0, 50, 0), RADIOUS / 2, 4, colores[YELLOW], 12.0f, bb);
-	createParticleGenerator(currentModel, Vector3(10), 0.5);
+	createActorGenerator(currentModel, Vector3(10), 0.5);
 
 	fgs.push_back(new WindGenerator(1, 0.1, Vector3(50, 0, 0), Vector3(-100, 100, 0), Vector3(200, 100, 200)));
 	fgs.push_back(new GravityGenerator(GLOBAL_GRAVITY, Vector3(-100, 0, 0), Vector3(300)));
@@ -134,7 +130,7 @@ void ParticleSystem::showTornadoForce() {
 	bb = new BoundingBox(Vector3(0), Vector3(400));
 
 	currentModel = new Particle(Vector3(0), Vector3(0, 50, 0), RADIOUS, 5, colores[GREEN], 20, bb);
-	createParticleGenerator(currentModel, Vector3(20), 0.8);
+	createActorGenerator(currentModel, Vector3(20), 0.8);
 
 	fgs.push_back(new TornadoGenerator(0.5, 1, 0.1, Vector3(0, 150, 0), Vector3(-20, 0, -20), Vector3(0), Vector3(200)));
 	fgs.push_back(new GravityGenerator(GLOBAL_GRAVITY, Vector3(150), Vector3(200)));
@@ -162,13 +158,13 @@ void ParticleSystem::showExplosionForce() {
 
 		Vector3 pos = Vector3(x, y + 60, z);
 
-		myParticles.push_back(new Particle(pos, Vector3(0), RADIOUS / 3, 3, colores[RED], 40, bb));
+		myActors.push_back(new Particle(pos, Vector3(0), RADIOUS / 3, 3, colores[RED], 40, bb));
 	}
 }
 
 void ParticleSystem::createExplosionForce() {
 	fgs.push_back(new ExplosionGenerator(1000, 5000, 3, Vector3(0, 60, 0), 12));
-	pfr->addRegistry(fgs, myParticles);
+	afr->addRegistry(fgs, myActors);
 }
 
 #pragma endregion
@@ -182,7 +178,7 @@ void ParticleSystem::showSpringForce() {
 	particlesLimit = -1;
 
 	bb = new BoundingBox(Vector3(0, 0, 0), Vector3(300, 100, 300));
-	list<Particle*> parts;
+	list<PhysicActor*> parts;
 	Particle* part1 = new Particle(Vector3(20, 0, 0), Vector3(0), 3, 1, colores[BLACK], 100, bb);
 	Particle* part2 = new Particle(Vector3(-20, 0, 0), Vector3(0), 3, 1, colores[WHITE], 100, bb);
 	parts.push_back(part1); parts.push_back(part2);
@@ -192,9 +188,9 @@ void ParticleSystem::showSpringForce() {
 	SpringGenerator* sg2 = new SpringGenerator(randK, 30, part1);
 	fgs.push_back(sg1); fgs.push_back(sg2);
 
-	myParticles.splice(myParticles.end(), parts);
-	pfr->addRegistry(sg1, part1);
-	pfr->addRegistry(sg2, part2);
+	myActors.splice(myActors.end(), parts);
+	afr->addRegistry(sg1, part1);
+	afr->addRegistry(sg2, part2);
 }
 
 void ParticleSystem::showAnchoredSpringForce() {
@@ -205,7 +201,7 @@ void ParticleSystem::showAnchoredSpringForce() {
 
 	bb = new BoundingBox(Vector3(0, 0, 0), Vector3(300, 100, 300));
 
-	list<Particle*> parts;
+	list<PhysicActor*> parts;
 	Particle* part1 = new Particle(Vector3(-6, 0, 8), Vector3(0), 2, 0.5, colores[RED], 100, bb);
 	Particle* part2 = new Particle(Vector3(1, 0, 0), Vector3(0), 2, 4, colores[BLUE], 100, bb);
 	Particle* part3 = new Particle(Vector3(-5, 0, 0), Vector3(0), 2, 2, colores[GREEN], 100, bb);
@@ -215,8 +211,8 @@ void ParticleSystem::showAnchoredSpringForce() {
 
 	fgs.push_back(new AnchoredSpringGenerator((rand() % 10) + 1, 20, Vector3(0)));
 
-	myParticles.splice(myParticles.end(), parts);
-	pfr->addRegistry(fgs, myParticles);
+	myActors.splice(myActors.end(), parts);
+	afr->addRegistry(fgs, myActors);
 }
 
 void ParticleSystem::showElastic() {
@@ -225,7 +221,7 @@ void ParticleSystem::showElastic() {
 	particlesLimit = -1;
 
 	bb = new BoundingBox(Vector3(0, 0, 0), Vector3(300, 300, 300));
-	list<Particle*> parts;
+	list<PhysicActor*> parts;
 	Particle* part1 = new Particle(Vector3(50, 0, 0), Vector3(0), 3, 1, colores[BLACK], -1, bb);
 	Particle* part2 = new Particle(Vector3(-50, 0, 0), Vector3(0), 3, 1, colores[WHITE], -1, bb);
 	parts.push_back(part1); parts.push_back(part2);
@@ -235,9 +231,9 @@ void ParticleSystem::showElastic() {
 	SpringGenerator* sg2 = new SpringGenerator(randK, 90, part1, true);
 	fgs.push_back(sg1); fgs.push_back(sg2);
 
-	myParticles.splice(myParticles.end(), parts);
-	pfr->addRegistry(sg1, part1);
-	pfr->addRegistry(sg2, part2);
+	myActors.splice(myActors.end(), parts);
+	afr->addRegistry(sg1, part1);
+	afr->addRegistry(sg2, part2);
 }
 
 void ParticleSystem::showBouyancyForce() {
@@ -250,19 +246,19 @@ void ParticleSystem::showBouyancyForce() {
 	bb = new BoundingBox(Vector3(0, 0, 0), Vector3(300, 100, 300));
 
 	floutingBox = new BoxParticle(Vector3(0, 70, 0), Vector3(0), 1, 200, colores[RED], -1, bb);
-	myParticles.push_back(floutingBox);
+	myActors.push_back(floutingBox);
 
 	fgs.push_back(new BouyancyForceGenerator(2, 8, 1000, Vector3(0, 50, 0), Vector3(20, 100, 20)));
 	fgs.push_back(new GravityGenerator(GLOBAL_GRAVITY, Vector3(0), Vector3(300)));
 
-	pfr->addRegistry(fgs, myParticles);
+	afr->addRegistry(fgs, myActors);
 }
 
 void ParticleSystem::addGravity() {
 	if (!existGrav) {
 		GravityGenerator* gg = new GravityGenerator(GLOBAL_GRAVITY, Vector3(0), Vector3(500));
 		fgs.push_back(gg);
-		pfr->addRegistry(gg, myParticles);
+		afr->addRegistry(gg, myActors);
 		existGrav = true;
 	}
 }
@@ -271,7 +267,7 @@ void ParticleSystem::addWind() {
 	if (!existWind) {
 		WindGenerator* wg = new WindGenerator(1, 0.1, Vector3(10, 0, 0), Vector3(-20, 0, -20), Vector3(200, 100, 200));
 		fgs.push_back(wg);
-		pfr->addRegistry(wg, myParticles);
+		afr->addRegistry(wg, myActors);
 		existWind = true;
 	}
 }
@@ -306,14 +302,14 @@ void ParticleSystem::changeMass(bool increase) {
 
 #pragma endregion
 
-void ParticleSystem::createParticleGenerator(Particle* model, Vector3 var_v, double prob, bool up, Vector3 var_p) {
+void ParticleSystem::createActorGenerator(PhysicActor* model, Vector3 var_v, double prob, bool up, Vector3 var_p) {
 	int type = rand() % 2;
-	string name = "PartGenerator" + std::to_string(particleGenerators.size() + 1);
+	string name = "PartGenerator" + std::to_string(actorsGenerators.size() + 1);
 	if (type % 2 == 0) {
-		particleGenerators.push_back(new UniformParticleGenerator(name, model, var_v, prob, pfr, fgs, up, var_p));
+		actorsGenerators.push_back(new UniformGenerator(name, gPx, scene, model, var_v, prob, afr, fgs, up, var_p));
 	}
 	else {
-		particleGenerators.push_back(new GaussianParticleGenerator(name, model, var_v, prob, pfr, fgs, up, var_p));
+		actorsGenerators.push_back(new GaussianGenerator(name, gPx, scene, model, var_v, prob, afr, fgs, up, var_p));
 	}
 }
 
@@ -325,13 +321,13 @@ void ParticleSystem::clear() {
 	delete currentModel; currentModel = nullptr;
 	delete bb; bb = nullptr;
 	
-	pfr->deleteAllParticlesRegistry(myParticles);
+	afr->deleteAllActorsRegistry(myActors);
 
-	for (ParticleGenerator* pg : particleGenerators) delete pg;
-	particleGenerators.clear();
+	for (ActorGenerator* pg : actorsGenerators) delete pg;
+	actorsGenerators.clear();
 
-	for (Particle* p : myParticles) delete p;
-	myParticles.clear();
+	for (PhysicActor* p : myActors) delete p;
+	myActors.clear();
 
 	for (ForceGenerator* fg : fgs) delete fg;
 	fgs.clear();

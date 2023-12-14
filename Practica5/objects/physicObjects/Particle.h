@@ -1,6 +1,5 @@
 #pragma once
-#include "../../RenderUtils.hpp"
-#include "BoundingBox.h"
+#include "PhysicActor.h"
 #include <iostream>
 
 // Parametros de la particula
@@ -21,51 +20,31 @@ const std::vector<Vector4> colores = {
 	Vector4(0, 0, 0, 1)
 };
 
-class Particle {
+class Particle : public PhysicActor {
 protected:
-	// Parámetros de movimiento
-	Vector3 vel;
-	Vector3 acceleration;
-	float damping;
-
-	double lifeTime;
-
-	physx::PxTransform pose;
-	RenderItem* renderItem;
+	Vector3 vel, acc, force;
 	float radious;
-	Vector4 col;
-
-	Vector3 force;
-	double inv_mass, mass;
-
-	BoundingBox* bb;
+	Vector4 color;
 
 public:
-	Particle(Vector3 pos, Vector3 vel, float rad, double m, Vector4 color,
-		double lt, BoundingBox* _bb, float dp = 0.998f);
-	virtual ~Particle();
+	Particle(Vector3 pos, Vector3 v, float rad, double m, Vector4 col, double lt, BoundingBox* _bb, float dp = 0.998f);
 
-	virtual bool integrate(double t);
 
 	// Getters
-	Vector3 getPos()	{ return pose.p; }
-	Vector3 getVel()	{ return vel; }
-	Vector3 getAcc()	{ return acceleration; }
-	Vector4 getColor()	{ return renderItem->color; }
-	float getRadious()	{ return radious; }
-	double getMass()	{ return mass; }
-	double getInvMass()	{ return inv_mass; }
+	virtual Vector3 getVelocity();
+	virtual float getHeight();
+	Vector3 getAcc() { return acc; }
+	Vector4 getColor() { return color; }
+	float getRadious() { return radious; }
 
 	// Setters
 	void setVel(Vector3 v) { vel = v; }
-	void setLifeTime(double const& lt)	{ lifeTime = lt; }
-	void setPosition(Vector3 const& p)	{ pose.p = p; }
-	void setMass(double m);
 
-	virtual Particle* clone() const;
-	virtual Particle* clone(Vector3 p, Vector3 v) const;
+	virtual bool integrate(double t);
 
-	void clearForce();
-	void addForce(const Vector3& f);
-	void removeRender() { renderItem->release(); renderItem = nullptr; }
+	virtual void addForce(Vector3 f);
+	virtual void clearForce();
+	
+	virtual PhysicActor* clone(PxPhysics* gPx, PxScene* scene, Vector3 pos, Vector3 vel, float lt, BoundingBox* _bb);
+	virtual Particle* clone();
 };

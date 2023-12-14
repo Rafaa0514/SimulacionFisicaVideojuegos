@@ -1,23 +1,23 @@
 #include "Forces.h"
 
-bool GravityGenerator::updateForce(Particle* p) {
+bool GravityGenerator::updateForce(PhysicActor* p) {
 	if (fabs(p->getInvMass()) < 1e-10 || !bb->isInside(p->getPos())) return false;
 
 	p->addForce(grav * p->getMass());
 	return true;
 }
 
-bool WindGenerator::updateForce(Particle* p) {
+bool WindGenerator::updateForce(PhysicActor* p) {
 	if (fabs(p->getInvMass()) < 1e-10 || !bb->isInside(p->getPos())) return false;
 
-	Vector3 diffVel = wVel - p->getVel();
+	Vector3 diffVel = wVel - p->getVelocity();
 
 	Vector3 resultantForce = k1 * diffVel + k2 * diffVel.magnitude() * diffVel;
 	p->addForce(resultantForce);
 	return true;
 }
 
-bool TornadoGenerator::updateForce(Particle* p) {
+bool TornadoGenerator::updateForce(PhysicActor* p) {
 	if (fabs(p->getInvMass()) < 1e-10 || !bb->isInside(p->getPos())) return false;
 
 	Vector3 diff = p->getPos() - origin;
@@ -27,7 +27,7 @@ bool TornadoGenerator::updateForce(Particle* p) {
 	return true;
 }
 
-bool ExplosionGenerator::updateForce(Particle* p) {
+bool ExplosionGenerator::updateForce(PhysicActor* p) {
 	if (fabs(p->getInvMass()) < 1e-10) return false;
 
 	Vector3 dif = p->getPos() - center;
@@ -45,7 +45,7 @@ bool ExplosionGenerator::updateForce(Particle* p) {
 }
 
 
-bool AnchoredSpringGenerator::updateForce(Particle* p) {
+bool AnchoredSpringGenerator::updateForce(PhysicActor* p) {
 	Vector3 distance = point - p->getPos();
 	double l = distance.normalize();
 	float deltaX = l - r_length;
@@ -54,7 +54,7 @@ bool AnchoredSpringGenerator::updateForce(Particle* p) {
 	return true;
 }
 
-bool SpringGenerator::updateForce(Particle* p) {
+bool SpringGenerator::updateForce(PhysicActor* p) {
 	if (elastic) {
 		double distance = (p->getPos() - other->getPos()).magnitude();
 		if (distance < r_length) {  return true; }
@@ -63,7 +63,7 @@ bool SpringGenerator::updateForce(Particle* p) {
 	return AnchoredSpringGenerator::updateForce(p);
 }
 
-bool BouyancyForceGenerator::updateForce(Particle* p) {
+bool BouyancyForceGenerator::updateForce(PhysicActor* p) {
 	if (!bb->isInside(p->getPos())) return false;
 
 	float h = p->getPos().y;
@@ -74,7 +74,7 @@ bool BouyancyForceGenerator::updateForce(Particle* p) {
 	if (h - h0 > height * 0.5) immersed = 0.0;
 	else if (h0 - h > height * 0.5) immersed = 1.0;
 	else immersed = (h0 - h) / height + 0.5;
-	volume = pow(p->getRadious() * 2, 3);
+	volume = pow(p->getHeight(), 3);
 	f.y = liquid_density * volume * immersed * -GLOBAL_GRAVITY.y;
 	p->addForce(f);
 	return true;

@@ -106,7 +106,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		case 'J': pSys->showSpringForce(); break;
 		case 'K': pSys->showElastic(); break;
 		case 'L': pSys->showBouyancyForce(); break;
-		case 'G': pSys->addGravity(); break;
+		case 'G': pSys->showGravityForce(); break;
 		case 'F': pSys->addWind(); break;
 		case 'M': pSys->changeDimensions(true); break;
 		case 'N': pSys->changeDimensions(false); break;

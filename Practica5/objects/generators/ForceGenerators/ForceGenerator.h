@@ -1,5 +1,7 @@
 #pragma once
+#include "../../physicObjects/PhysicActor.h"
 #include "../../physicObjects/Particle.h"
+#include "../../physicObjects/RigidBody.h"
 #include "../../physicObjects/BoxParticle.h"
 #include "../../physicObjects/BoundingBox.h"
 
@@ -16,7 +18,7 @@ public:
 	ForceGenerator(string n, double d, Vector3 bbC, Vector3 bbS) :
 		name(n), time(0.0), duration(d), bb(new BoundingBox(bbC, bbS)) {}
 
-	virtual bool updateForce(Particle* particle) = 0;
+	virtual bool updateForce(PhysicActor* particle) = 0;
 
 	inline bool updateTime(double t) {
 		time += t;

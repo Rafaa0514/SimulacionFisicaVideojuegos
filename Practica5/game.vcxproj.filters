@@ -22,23 +22,26 @@
     <ClCompile Include="objects\generators\ParticleGenerators\FireworkGenerator.cpp">
       <Filter>objects\generators\ParticleGenerators</Filter>
     </ClCompile>
-    <ClCompile Include="objects\generators\ParticleGenerators\GaussianParticleGenerator.cpp">
+    <ClCompile Include="objects\generators\ParticleGenerators\GaussianGenerator.cpp">
       <Filter>objects\generators\ParticleGenerators</Filter>
     </ClCompile>
-    <ClCompile Include="objects\generators\ParticleGenerators\ParticleGenerator.cpp">
+    <ClCompile Include="objects\generators\ParticleGenerators\ActorGenerator.cpp">
       <Filter>objects\generators\ParticleGenerators</Filter>
     </ClCompile>
-    <ClCompile Include="objects\generators\ParticleGenerators\UniformParticleGenerator.cpp">
+    <ClCompile Include="objects\generators\ParticleGenerators\UniformGenerator.cpp">
       <Filter>objects\generators\ParticleGenerators</Filter>
     </ClCompile>
     <ClCompile Include="objects\generators\ForceGenerators\Forces.cpp">
       <Filter>objects\generators\ForceGenerators</Filter>
     </ClCompile>
-    <ClCompile Include="objects\physicObjects\BoxParticle.cpp">
-      <Filter>objects\physicObjects</Filter>
-    </ClCompile>
     <ClCompile Include="objects\generators\RigidBodyGenerator.cpp">
       <Filter>objects\generators</Filter>
+    </ClCompile>
+    <ClCompile Include="objects\physicObjects\PhysicActor.cpp">
+      <Filter>objects\physicObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="objects\physicObjects\RigidBody.cpp">
+      <Filter>objects\physicObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -63,19 +66,19 @@
     <ClInclude Include="objects\generators\ParticleGenerators\FireworkGenerator.h">
       <Filter>objects\generators\ParticleGenerators</Filter>
     </ClInclude>
-    <ClInclude Include="objects\generators\ParticleGenerators\GaussianParticleGenerator.h">
+    <ClInclude Include="objects\generators\ParticleGenerators\GaussianGenerator.h">
       <Filter>objects\generators\ParticleGenerators</Filter>
     </ClInclude>
-    <ClInclude Include="objects\generators\ParticleGenerators\ParticleGenerator.h">
+    <ClInclude Include="objects\generators\ParticleGenerators\ActorGenerator.h">
       <Filter>objects\generators\ParticleGenerators</Filter>
     </ClInclude>
-    <ClInclude Include="objects\generators\ParticleGenerators\UniformParticleGenerator.h">
+    <ClInclude Include="objects\generators\ParticleGenerators\UniformGenerator.h">
       <Filter>objects\generators\ParticleGenerators</Filter>
     </ClInclude>
     <ClInclude Include="objects\generators\ForceGenerators\ForceGenerator.h">
       <Filter>objects\generators\ForceGenerators</Filter>
     </ClInclude>
-    <ClInclude Include="objects\generators\ForceGenerators\ParticleForceRegistry.h">
+    <ClInclude Include="objects\generators\ForceGenerators\ActorForceRegistry.h">
       <Filter>objects\generators\ForceGenerators</Filter>
     </ClInclude>
     <ClInclude Include="objects\generators\ForceGenerators\Forces.h">
@@ -90,7 +93,7 @@
     <ClInclude Include="objects\physicObjects\PhysicActor.h">
       <Filter>objects\physicObjects</Filter>
     </ClInclude>
-    <ClInclude Include="objects\physicObjects\RigidBodies.h">
+    <ClInclude Include="objects\physicObjects\RigidBody.h">
       <Filter>objects\physicObjects</Filter>
     </ClInclude>
     <ClInclude Include="objects\generators\RigidBodyGenerator.h">

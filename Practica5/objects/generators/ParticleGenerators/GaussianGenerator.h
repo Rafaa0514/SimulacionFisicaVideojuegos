@@ -1,7 +1,7 @@
 #pragma once
-#include "ParticleGenerator.h"
+#include "ActorGenerator.h"
 
-class GaussianParticleGenerator : public ParticleGenerator {
+class GaussianGenerator : public ActorGenerator {
 protected:
 	normal_distribution<float>* velX;
 	normal_distribution<float>* velY;
@@ -12,12 +12,12 @@ protected:
 	normal_distribution<float>* posZ;
 
 public:
-	GaussianParticleGenerator(string n, Particle* model, Vector3 vel, float prob, 
-		ParticleForceRegistry* r, ForceGenerators& _fgs, bool up = true, Vector3 var_pos = Vector3(1));
-	virtual ~GaussianParticleGenerator();
+	GaussianGenerator(string n, PxPhysics* g, PxScene* s, PhysicActor* model, Vector3 vel, float prob,
+		ActorForceRegistry* r, ForceGenerators& _fgs, bool up = true, Vector3 var_pos = Vector3(1));
+	virtual ~GaussianGenerator();
 
 	// Metodos abstractos
-	virtual list<Particle*> generateParticles();
+	virtual list<PhysicActor*> generateActors();
 	virtual Vector3 calculateVel();
 	virtual Vector3 calculatePos();
 

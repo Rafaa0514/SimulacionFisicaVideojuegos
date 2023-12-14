@@ -1,9 +1,9 @@
 #pragma once
-#include "../generators/ParticleGenerators/UniformParticleGenerator.h"
-#include "../generators/ParticleGenerators/GaussianParticleGenerator.h"
+#include "../generators/ParticleGenerators/UniformGenerator.h"
+#include "../generators/ParticleGenerators/GaussianGenerator.h"
 #include "../generators/ParticleGenerators/FireworkGenerator.h"
 #include "../generators/ForceGenerators/Forces.h"
-#include "../generators/RigidBodyGenerator.h"
+#include "../physicObjects/PhysicActor.h"
 #include <list>
 #include <vector>
 
@@ -17,16 +17,16 @@ protected:
 	PxScene* scene;
 
 	int particlesLimit = 100;
-	Particle* currentModel;
-	std::list<Particle*> myParticles;
-	std::list<ParticleGenerator*> particleGenerators;
-	std::vector<list<Particle*>::iterator> deadParticles;
+	PhysicActor* currentModel;
+	std::list<PhysicActor*> myActors;
+	std::list<ActorGenerator*> actorsGenerators;
+	std::vector<list<PhysicActor*>::iterator> deadActors;
 
 	std::list<Firework*> fireworks_pool;
 	FireworkGenerator* fireworkGen;
 	std::vector<list<Firework*>::iterator> deadFireworks;
 
-	ParticleForceRegistry* pfr;
+	ActorForceRegistry* afr;
 	ForceGenerators fgs;
 
 	BoundingBox* bb;
@@ -43,7 +43,7 @@ public:
 
 	void update(double t);
 
-	ParticleGenerator* getParticleGenerator(string name);
+	ActorGenerator* getActorGenerator(string name);
 
 	void generateFireworkSystem();
 
@@ -68,7 +68,7 @@ public:
 	void changeDimensions(bool increase);
 	void changeMass(bool increase);
 
-	void createParticleGenerator(Particle* model, Vector3 var_v, double prob, bool up = true, Vector3 var_p = Vector3(1));
+	void createActorGenerator(PhysicActor* model, Vector3 var_v, double prob, bool up = true, Vector3 var_p = Vector3(1));
 
 	void clear();
 };

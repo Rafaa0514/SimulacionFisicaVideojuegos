@@ -13,7 +13,6 @@ protected:
 
 public:
 	Firework(Vector3 p, Vector3 v, double m, Vector4 color, float lt, BoundingBox* bb, int g, int n);
-	virtual ~Firework();
 
 	int getGeneration() { return gen; }
 	int getNumberSons() { return nSons; }

@@ -1,6 +1,6 @@
 #pragma once
 #include "../../physicObjects/Firework.h"
-#include "../ForceGenerators/ParticleForceRegistry.h"
+#include "../ForceGenerators/ActorForceRegistry.h"
 #include <random>
 
 using namespace std;
@@ -23,11 +23,11 @@ protected:
 	random_generator rg;
 
 	// Generadores de fuerzas
-	ParticleForceRegistry* pfr;
+	ActorForceRegistry* pfr;
 	ForceGenerators& fgs;
 
 public:
-	FireworkGenerator(string n, ParticleForceRegistry* r, ForceGenerators& _fgs, Vector3 var, bool up = true);
+	FireworkGenerator(string n, ActorForceRegistry* r, ForceGenerators& _fgs, Vector3 var, bool up = true);
 	~FireworkGenerator();
 
 	virtual list<Firework*> generateFireworks(Firework* father);
