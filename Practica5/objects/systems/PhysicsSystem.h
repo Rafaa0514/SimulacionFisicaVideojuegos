@@ -11,7 +11,7 @@ using namespace physx;
 
 enum ForceToShow { NONE, GRAV, WIND, TORN, EXPL, ANCH, SPRI, ELAS, BOUY, ALL };
 
-class ParticleSystem {
+class PhysicsSystem {
 protected:
 	PxPhysics* gPx;
 	PxScene* scene;
@@ -40,8 +40,8 @@ protected:
 	RigidBody* floor;
 
 public:
-	ParticleSystem(PxPhysics* g, PxScene* s);
-	~ParticleSystem();
+	PhysicsSystem(PxPhysics* g, PxScene* s);
+	~PhysicsSystem();
 
 	void update(double t);
 

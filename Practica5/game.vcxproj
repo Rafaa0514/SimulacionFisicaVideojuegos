@@ -264,7 +264,7 @@
     <ClCompile Include="objects\physicObjects\Particle.cpp" />
     <ClCompile Include="objects\physicObjects\PhysicActor.cpp" />
     <ClCompile Include="objects\physicObjects\RigidBody.cpp" />
-    <ClCompile Include="objects\systems\ParticleSystem.cpp" />
+    <ClCompile Include="objects\systems\PhysicsSystem.cpp" />
     <ClCompile Include="RenderUtils.cpp" />
     <ClCompile Include="Render\Camera.cpp" />
     <ClCompile Include="Render\Render.cpp" />
@@ -285,7 +285,7 @@
     <ClInclude Include="objects\physicObjects\Particle.h" />
     <ClInclude Include="objects\physicObjects\PhysicActor.h" />
     <ClInclude Include="objects\physicObjects\RigidBody.h" />
-    <ClInclude Include="objects\systems\ParticleSystem.h" />
+    <ClInclude Include="objects\systems\PhysicsSystem.h" />
     <ClInclude Include="RenderUtils.hpp" />
     <ClInclude Include="Render\Camera.h" />
     <ClInclude Include="Render\Render.h" />

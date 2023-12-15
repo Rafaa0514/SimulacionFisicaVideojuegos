@@ -13,7 +13,7 @@
     <ClCompile Include="objects\physicObjects\Particle.cpp">
       <Filter>objects\physicObjects</Filter>
     </ClCompile>
-    <ClCompile Include="objects\systems\ParticleSystem.cpp">
+    <ClCompile Include="objects\systems\PhysicsSystem.cpp">
       <Filter>objects\systems</Filter>
     </ClCompile>
     <ClCompile Include="objects\physicObjects\Firework.cpp">
@@ -54,7 +54,7 @@
     <ClInclude Include="objects\physicObjects\Particle.h">
       <Filter>objects\physicObjects</Filter>
     </ClInclude>
-    <ClInclude Include="objects\systems\ParticleSystem.h">
+    <ClInclude Include="objects\systems\PhysicsSystem.h">
       <Filter>objects\systems</Filter>
     </ClInclude>
     <ClInclude Include="objects\physicObjects\Firework.h">

@@ -10,7 +10,7 @@
 
 #include <iostream>
 
-#include "objects/systems/ParticleSystem.h"
+#include "objects/systems/PhysicsSystem.h"
 
 std::string display_text = "";
 
@@ -32,7 +32,7 @@ PxDefaultCpuDispatcher*	gDispatcher = NULL;
 PxScene*				gScene      = NULL;
 ContactReportCallback gContactReportCallback;
 
-ParticleSystem* pSys = nullptr;
+PhysicsSystem* pSys = nullptr;
 
 
 // Initialize physics engine
@@ -59,7 +59,7 @@ void initPhysics(bool interactive)
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
 
-	pSys = new ParticleSystem(gPhysics, gScene);
+	pSys = new PhysicsSystem(gPhysics, gScene);
 }
 
 

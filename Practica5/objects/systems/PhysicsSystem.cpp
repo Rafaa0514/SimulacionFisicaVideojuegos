@@ -1,6 +1,6 @@
-#include "ParticleSystem.h"
+#include "PhysicsSystem.h"
 
-ParticleSystem::ParticleSystem(PxPhysics* g, PxScene* s) : fgs(), gPx(g), scene(s) {
+PhysicsSystem::PhysicsSystem(PxPhysics* g, PxScene* s) : fgs(), gPx(g), scene(s) {
 	afr = new ActorForceRegistry();
 	bb = new BoundingBox(Vector3(0), Vector3(200, 50, 200));
 	currentModel = nullptr;
@@ -10,11 +10,11 @@ ParticleSystem::ParticleSystem(PxPhysics* g, PxScene* s) : fgs(), gPx(g), scene(
 
 }
 
-ParticleSystem::~ParticleSystem() {
+PhysicsSystem::~PhysicsSystem() {
 	clear();
 }
 
-void ParticleSystem::update(double t) {
+void PhysicsSystem::update(double t) {
 	if (fts == EXPL && !exploded) {
 		timer += t;
 		if (timer >= 3) { exploded = true; createExplosionForce(); }
@@ -66,7 +66,7 @@ void ParticleSystem::update(double t) {
 	afr->updateForces();
 }
 
-ActorGenerator* ParticleSystem::getActorGenerator(string name) {
+ActorGenerator* PhysicsSystem::getActorGenerator(string name) {
 	auto it = actorsGenerators.begin();
 	bool found = false;
 
@@ -78,7 +78,7 @@ ActorGenerator* ParticleSystem::getActorGenerator(string name) {
 	return (*it);
 }
 
-void ParticleSystem::updateForcesTime(double t) {
+void PhysicsSystem::updateForcesTime(double t) {
 	for (auto it = fgs.begin(); it != fgs.end();) {
 		if (!(*it)->updateTime(t)) {
 			afr->deleteForceRegistry(*it);
@@ -91,7 +91,7 @@ void ParticleSystem::updateForcesTime(double t) {
 
 #pragma region Forces Practica3
 
-void ParticleSystem::showGravityForce() {
+void PhysicsSystem::showGravityForce() {
 	if (fts == GRAV) return;
 	if (fts != NONE) clear();
 	fts = GRAV;
@@ -105,7 +105,7 @@ void ParticleSystem::showGravityForce() {
 	fgs.push_back(new GravityGenerator(GLOBAL_GRAVITY, Vector3(0), Vector3(300)));
 }
 
-void ParticleSystem::showWindForce() {
+void PhysicsSystem::showWindForce() {
 	if (fts == WIND) return;
 	if (fts != NONE) clear();
 
@@ -122,7 +122,7 @@ void ParticleSystem::showWindForce() {
 	fgs.push_back(new GravityGenerator(GLOBAL_GRAVITY, Vector3(-100, 0, 0), Vector3(300)));
 }
 
-void ParticleSystem::showTornadoForce() {
+void PhysicsSystem::showTornadoForce() {
 	if (fts == TORN && !exploded) return;
 	if (fts != NONE) clear();
 	fts = TORN;
@@ -138,7 +138,7 @@ void ParticleSystem::showTornadoForce() {
 	fgs.push_back(new GravityGenerator(GLOBAL_GRAVITY, Vector3(150), Vector3(200)));
 }
 
-void ParticleSystem::showExplosionForce() {
+void PhysicsSystem::showExplosionForce() {
 	if (fts == EXPL) return;
 	if (fts != NONE) clear();
 
@@ -164,7 +164,7 @@ void ParticleSystem::showExplosionForce() {
 	}
 }
 
-void ParticleSystem::createExplosionForce() {
+void PhysicsSystem::createExplosionForce() {
 	fgs.push_back(new ExplosionGenerator(1000, 5000, 3, Vector3(0, 60, 0), 12));
 	afr->addRegistry(fgs, myActors);
 }
@@ -173,7 +173,7 @@ void ParticleSystem::createExplosionForce() {
 
 #pragma region Forces Practica4
 
-void ParticleSystem::showSpringForce() {
+void PhysicsSystem::showSpringForce() {
 	if (fts == SPRI) return;
 	if (fts != NONE) clear();
 	fts = SPRI;
@@ -195,7 +195,7 @@ void ParticleSystem::showSpringForce() {
 	afr->addRegistry(sg2, part2);
 }
 
-void ParticleSystem::showAnchoredSpringForce() {
+void PhysicsSystem::showAnchoredSpringForce() {
 	if (fts == ANCH) return;
 	if (fts != NONE) clear();
 	fts = ANCH;
@@ -216,7 +216,7 @@ void ParticleSystem::showAnchoredSpringForce() {
 	afr->addRegistry(fgs, myActors);
 }
 
-void ParticleSystem::showElastic() {
+void PhysicsSystem::showElastic() {
 	if (fts != NONE) clear();
 	fts = ELAS;
 	particlesLimit = -1;
@@ -237,7 +237,7 @@ void ParticleSystem::showElastic() {
 	afr->addRegistry(sg2, part2);
 }
 
-void ParticleSystem::showBouyancyForce() {
+void PhysicsSystem::showBouyancyForce() {
 	if (fts == BOUY) return;
 	if (fts != NONE) clear();
 	fts = BOUY;
@@ -255,7 +255,7 @@ void ParticleSystem::showBouyancyForce() {
 	afr->addRegistry(fgs, myActors);
 }
 
-void ParticleSystem::addGravity() {
+void PhysicsSystem::addGravity() {
 	if (!existGrav) {
 		GravityGenerator* gg = new GravityGenerator(GLOBAL_GRAVITY, Vector3(0), Vector3(500));
 		fgs.push_back(gg);
@@ -264,7 +264,7 @@ void ParticleSystem::addGravity() {
 	}
 }
 
-void ParticleSystem::addWind() {
+void PhysicsSystem::addWind() {
 	if (!existWind) {
 		WindGenerator* wg = new WindGenerator(1, 0.1, Vector3(10, 0, 0), Vector3(-20, 0, -20), Vector3(200, 100, 200));
 		fgs.push_back(wg);
@@ -273,7 +273,7 @@ void ParticleSystem::addWind() {
 	}
 }
 
-void ParticleSystem::changeK(bool increase) {
+void PhysicsSystem::changeK(bool increase) {
 	if (fts == SPRI || fts == ANCH || fts == ELAS) {
 		for (auto it = fgs.begin(); it != fgs.end(); it++) {
 			AnchoredSpringGenerator* cfg = static_cast<AnchoredSpringGenerator*>(*it);
@@ -285,7 +285,7 @@ void ParticleSystem::changeK(bool increase) {
 	}
 }
 
-void ParticleSystem::changeDimensions(bool increase) {
+void PhysicsSystem::changeDimensions(bool increase) {
 	if (fts == BOUY) {
 		if (increase) floutingBox->changeDimensions(floutingBox->getRadious() + 0.5);
 		else if (floutingBox->getRadious() > 0.5) floutingBox->changeDimensions(floutingBox->getRadious() - 0.5);
@@ -293,7 +293,7 @@ void ParticleSystem::changeDimensions(bool increase) {
 	}
 }
 
-void ParticleSystem::changeMass(bool increase) {
+void PhysicsSystem::changeMass(bool increase) {
 	if (fts == BOUY) {
 		if (increase) floutingBox->setMass(floutingBox->getMass() + 100);
 		else if (floutingBox->getMass() > 100) floutingBox->setMass(floutingBox->getMass() - 100);
@@ -305,7 +305,7 @@ void ParticleSystem::changeMass(bool increase) {
 
 #pragma region Forces Practica 5
 
-void ParticleSystem::gravityRigid() {
+void PhysicsSystem::gravityRigid() {
 	if (fts == GRAV) return;
 	if (fts != NONE) clear();
 	fts = GRAV;
@@ -319,7 +319,7 @@ void ParticleSystem::gravityRigid() {
 	createActorGenerator(currentModel, Vector3(10), 0.7, false, Vector3(10));
 }
 
-void ParticleSystem::windRigid() {
+void PhysicsSystem::windRigid() {
 	if (fts == WIND) return;
 	if (fts != NONE) clear();
 
@@ -336,7 +336,7 @@ void ParticleSystem::windRigid() {
 	fgs.push_back(new WindGenerator(1, 0.1, Vector3(50, 0, 0), Vector3(-100, 100, 0), Vector3(200, 100, 200)));
 }
 
-void ParticleSystem::tornadoRigid() {
+void PhysicsSystem::tornadoRigid() {
 	if (fts == TORN && !exploded) return;
 	if (fts != NONE) clear();
 	fts = TORN;
@@ -352,7 +352,7 @@ void ParticleSystem::tornadoRigid() {
 	fgs.push_back(new TornadoGenerator(0.5, 1, 0.1, Vector3(0, 150, 0), Vector3(-20, 0, -20), Vector3(0), Vector3(200)));
 }
 
-void ParticleSystem::explosionRigid() {
+void PhysicsSystem::explosionRigid() {
 	if (fts == EXPL) return;
 	if (fts != NONE) clear();
 
@@ -379,7 +379,7 @@ void ParticleSystem::explosionRigid() {
 	}
 }
 
-void ParticleSystem::anchoredSpringsRigid() {
+void PhysicsSystem::anchoredSpringsRigid() {
 	if (fts == ANCH) return;
 	if (fts != NONE) clear();
 	fts = ANCH;
@@ -404,7 +404,7 @@ void ParticleSystem::anchoredSpringsRigid() {
 
 #pragma endregion
 
-void ParticleSystem::createActorGenerator(PhysicActor* model, Vector3 var_v, double prob, bool up, Vector3 var_p) {
+void PhysicsSystem::createActorGenerator(PhysicActor* model, Vector3 var_v, double prob, bool up, Vector3 var_p) {
 	int type = rand() % 2;
 	string name = "PartGenerator" + std::to_string(actorsGenerators.size() + 1);
 	if (type % 2 == 0) {
@@ -415,7 +415,7 @@ void ParticleSystem::createActorGenerator(PhysicActor* model, Vector3 var_v, dou
 	}
 }
 
-void ParticleSystem::clear() {
+void PhysicsSystem::clear() {
 	fts = NONE;
 	existGrav = false;
 	existWind = false;
