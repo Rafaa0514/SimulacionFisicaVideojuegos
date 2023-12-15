@@ -1,6 +1,6 @@
 #include "RigidBody.h"
 
-RigidBody::RigidBody(PxPhysics* gPx, PxScene* scene, Vector3 pos, Vector3 s, Vector3 vel, Vector4 col, bool mov, double m, float lt, BoundingBox* _bb) : 
+RigidBody::RigidBody(PxPhysics* gPx, PxScene* scene, Vector3 pos, Vector3 s, Vector3 vel, Vector4 col, bool mov, double m, BoundingBox* _bb, float lt) :
 	PhysicActor(pos, m, lt, _bb), scale(s), color(col), movable(mov) {
 	shape = CreateShape(PxBoxGeometry(scale));
 
@@ -11,7 +11,7 @@ RigidBody::RigidBody(PxPhysics* gPx, PxScene* scene, Vector3 pos, Vector3 s, Vec
 		scene->addActor(*bDynamic);
 
 		bDynamic->setMass(m);
-		bDynamic->setLinearVelocity(Vector3(vel));
+		bDynamic->setLinearVelocity(vel);
 		//PxRigidBodyExt::setMassAndUpdateInertia(static_cast<*PxRigidBody>(bDynamic), PxReal(mass));
 	}
 	else {
@@ -20,6 +20,16 @@ RigidBody::RigidBody(PxPhysics* gPx, PxScene* scene, Vector3 pos, Vector3 s, Vec
 		renderItem = new RenderItem(shape, bStatic, color);
 		scene->addActor(*bStatic);
 	}
+}
+
+bool RigidBody::integrate(double t) {
+	if (movable) {
+		Vector3 vel = bDynamic->getLinearVelocity();
+		vel *= powf(damping, t);
+
+		pose.p += vel * t;
+	}
+	return PhysicActor::integrate(t);
 }
 
 void RigidBody::addForce(Vector3 f) {
@@ -40,5 +50,5 @@ float RigidBody::getHeight() {
 }
 
 PhysicActor* RigidBody::clone(PxPhysics* gPx, PxScene* scene, Vector3 pos, Vector3 vel, float lt, BoundingBox* _bb) {
-	return new RigidBody(gPx, scene, pos, scale, vel, color, movable, mass, lt, _bb);
+	return new RigidBody(gPx, scene, pos, scale, vel, color, movable, mass, _bb, lt);
 }

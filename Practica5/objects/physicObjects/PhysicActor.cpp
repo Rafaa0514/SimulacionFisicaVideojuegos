@@ -18,6 +18,5 @@ void PhysicActor::setMass(double m) {
 
 bool PhysicActor::integrate(double t) {
 	if (lifeTime != -1) lifeTime -= t;
-
-	return ((lifeTime == -1 || lifeTime > 0) && (bb == nullptr || bb->isInside(pose.p)));
+	return ((bb == nullptr || bb->isInside(pose.p)) && (lifeTime == -1 || lifeTime > 0));
 }

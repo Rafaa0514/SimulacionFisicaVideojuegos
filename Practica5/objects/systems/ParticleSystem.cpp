@@ -2,13 +2,12 @@
 
 ParticleSystem::ParticleSystem(PxPhysics* g, PxScene* s) : fgs(), gPx(g), scene(s) {
 	afr = new ActorForceRegistry();
-	bb = new BoundingBox(Vector3(0), Vector3(500));
+	bb = new BoundingBox(Vector3(0), Vector3(200, 50, 200));
 	currentModel = nullptr;
 	fts = NONE;
 	existGrav = false; existWind = false;
 
-	currentModel = new RigidBody(gPx, scene, Vector3(0), Vector3(1), Vector3(0), colores[BLUE], true, 2, 3, bb);
-	createActorGenerator(currentModel, Vector3(0.1, 0.1, 0.1), 0.7);
+	showTornadoForce();
 }
 
 ParticleSystem::~ParticleSystem() {
@@ -132,7 +131,8 @@ void ParticleSystem::showTornadoForce() {
 	particlesLimit = -1;
 	bb = new BoundingBox(Vector3(0), Vector3(400));
 
-	currentModel = new Particle(Vector3(0), Vector3(0, 50, 0), RADIOUS, 5, colores[GREEN], 20, bb);
+	//currentModel = new Particle(Vector3(0), Vector3(0, 50, 0), RADIOUS, 5, colores[GREEN], 20, bb);
+	currentModel = new RigidBody(gPx, scene, Vector3(0), Vector3(1), Vector3(0, 5, 0), colores[GREEN], true, 5, bb);
 	createActorGenerator(currentModel, Vector3(20), 0.8);
 
 	fgs.push_back(new TornadoGenerator(0.5, 1, 0.1, Vector3(0, 150, 0), Vector3(-20, 0, -20), Vector3(0), Vector3(200)));
