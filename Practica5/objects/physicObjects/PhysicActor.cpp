@@ -6,7 +6,7 @@ PhysicActor::PhysicActor(Vector3 pos, double m, float lt, BoundingBox* _bb, floa
 }
 
 PhysicActor::~PhysicActor() {
-	if (renderItem != nullptr) releaseRender();
+	releaseRender();
 }
 
 void PhysicActor::setMass(double m) {
@@ -16,7 +16,16 @@ void PhysicActor::setMass(double m) {
 	mass = m;
 }
 
+
 bool PhysicActor::integrate(double t) {
 	if (lifeTime != -1) lifeTime -= t;
 	return ((bb == nullptr || bb->isInside(pose.p)) && (lifeTime == -1 || lifeTime > 0));
+}
+
+
+void PhysicActor::releaseRender(){ 
+	if (renderItem != nullptr) {
+		renderItem->release();
+		renderItem = nullptr;
+	}
 }

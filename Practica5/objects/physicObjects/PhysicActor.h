@@ -33,13 +33,13 @@ public:
 	void setMass(double m);
 
 	virtual bool integrate(double t);
+	void releaseRender();
 
 	// Metodos abstractos
 	virtual void addForce(Vector3 f) = 0;
 	virtual void clearForce() = 0;
 	virtual Vector3 getVelocity() = 0;
 	virtual float getHeight() = 0;
-	void releaseRender() { renderItem->release(); renderItem = nullptr; }
 
 	virtual PhysicActor* clone(PxPhysics* gPx, PxScene* scene, Vector3 pos, Vector3 vel, float lt, BoundingBox* _bb) = 0;
 };

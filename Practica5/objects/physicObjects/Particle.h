@@ -12,11 +12,11 @@ const float RADIOUS = 2.0f;
 enum Colors { RED, BLUE, YELLOW, GREEN, WHITE, BLACK };
 
 const std::vector<Vector4> colores = {
-	Vector4(255, 0, 0, 1),
-	Vector4(0, 255, 255, 1),
-	Vector4(255, 255, 0, 1),
-	Vector4(0, 255, 0, 1),
-	Vector4(255, 255, 255, 1),
+	Vector4(1, 0, 0, 1),
+	Vector4(0, 1, 1, 1),
+	Vector4(1, 1, 0, 1),
+	Vector4(0, 1, 0, 1),
+	Vector4(1, 1, 1, 1),
 	Vector4(0, 0, 0, 1)
 };
 

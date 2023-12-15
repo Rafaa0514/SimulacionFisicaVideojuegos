@@ -22,6 +22,14 @@ RigidBody::RigidBody(PxPhysics* gPx, PxScene* scene, Vector3 pos, Vector3 s, Vec
 	}
 }
 
+RigidBody::~RigidBody() {
+	if (movable) bDynamic->release();
+	else bStatic->release();
+
+	renderItem->release();
+	renderItem = nullptr;
+}
+
 bool RigidBody::integrate(double t) {
 	if (movable) {
 		Vector3 vel = bDynamic->getLinearVelocity();

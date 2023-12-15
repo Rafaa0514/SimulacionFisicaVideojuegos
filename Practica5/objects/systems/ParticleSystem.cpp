@@ -6,8 +6,8 @@ ParticleSystem::ParticleSystem(PxPhysics* g, PxScene* s) : fgs(), gPx(g), scene(
 	currentModel = nullptr;
 	fts = NONE;
 	existGrav = false; existWind = false;
+	floor = nullptr;
 
-	showTornadoForce();
 }
 
 ParticleSystem::~ParticleSystem() {
@@ -202,7 +202,6 @@ void ParticleSystem::showAnchoredSpringForce() {
 	particlesLimit = -1;
 
 	bb = new BoundingBox(Vector3(0, 0, 0), Vector3(300, 100, 300));
-
 	list<PhysicActor*> parts;
 	Particle* part1 = new Particle(Vector3(-6, 0, 8), Vector3(0), 2, 0.5, colores[RED], 100, bb);
 	Particle* part2 = new Particle(Vector3(1, 0, 0), Vector3(0), 2, 4, colores[BLUE], 100, bb);
@@ -304,6 +303,107 @@ void ParticleSystem::changeMass(bool increase) {
 
 #pragma endregion
 
+#pragma region Forces Practica 5
+
+void ParticleSystem::gravityRigid() {
+	if (fts == GRAV) return;
+	if (fts != NONE) clear();
+	fts = GRAV;
+	existGrav = true;
+	particlesLimit = 1500;
+	bb = new BoundingBox(Vector3(-50, 0, -100), Vector3(300, 400, 300));
+	scene->setGravity(Vector3(0, -9.8, 0));
+	floor = new RigidBody(gPx, scene, Vector3(-50, 0, -100), Vector3(150, 1, 150), Vector3(0), colores[BLACK], false, 30);
+
+	currentModel = new RigidBody(gPx, scene, Vector3(-50, 100, -100), Vector3(1), Vector3(0, 50, 0), colores[BLUE], true, 2, bb, 7.5f);
+	createActorGenerator(currentModel, Vector3(10), 0.7, false, Vector3(10));
+}
+
+void ParticleSystem::windRigid() {
+	if (fts == WIND) return;
+	if (fts != NONE) clear();
+
+	fts = WIND;
+	existGrav = true;
+	existWind = true;
+	particlesLimit = 250;
+	bb = new BoundingBox(Vector3(-100, 200, 0), Vector3(150, 300, 150));
+	scene->setGravity(Vector3(0, -9.8, 0));
+
+	currentModel = new RigidBody(gPx, scene, Vector3(-100, 0, 0), Vector3(1), Vector3(0, 50, 0), colores[YELLOW], true, 4, bb);
+	createActorGenerator(currentModel, Vector3(10), 0.5, false, Vector3(5));
+
+	fgs.push_back(new WindGenerator(1, 0.1, Vector3(50, 0, 0), Vector3(-100, 100, 0), Vector3(200, 100, 200)));
+}
+
+void ParticleSystem::tornadoRigid() {
+	if (fts == TORN && !exploded) return;
+	if (fts != NONE) clear();
+	fts = TORN;
+	existGrav = true;
+	existWind = true;
+	particlesLimit = -1;
+	bb = new BoundingBox(Vector3(0), Vector3(500));
+	scene->setGravity(Vector3(0, -9.8, 0));
+
+	currentModel = new RigidBody(gPx, scene, Vector3(0), Vector3(1), Vector3(0, 50, 0), colores[GREEN], true, 15, bb);
+	createActorGenerator(currentModel, Vector3(20), 0.8, false, Vector3(15, 1, 15));
+
+	fgs.push_back(new TornadoGenerator(0.5, 1, 0.1, Vector3(0, 150, 0), Vector3(-20, 0, -20), Vector3(0), Vector3(200)));
+}
+
+void ParticleSystem::explosionRigid() {
+	if (fts == EXPL) return;
+	if (fts != NONE) clear();
+
+	fts = EXPL;
+	particlesLimit = 150;
+	timer = 0;
+	exploded = false;
+	bb = new BoundingBox(Vector3(0, 60, 0), Vector3(100));
+	scene->setGravity(Vector3(0));
+
+	float rad = 17.5; float pi = 3.141516;
+
+	for (int i = 0; i < particlesLimit; i++) {
+		float theta = rand() % 360;
+		float phi = rand() % 360;
+
+		float x = rad * sin(theta * pi / 180.0f) * cos(phi * pi / 180.0f);
+		float y = rad * sin(theta * pi / 180.0f) * sin(phi * pi / 180.0f);
+		float z = rad * cos(theta * pi / 180.0f);
+
+		Vector3 pos = Vector3(x, y + 60, z);
+
+		myActors.push_back(new RigidBody(gPx, scene, pos, Vector3(0.5), Vector3(0), colores[RED], true, 4, bb, 20));
+	}
+}
+
+void ParticleSystem::anchoredSpringsRigid() {
+	if (fts == ANCH) return;
+	if (fts != NONE) clear();
+	fts = ANCH;
+	particlesLimit = -1;
+
+	bb = new BoundingBox(Vector3(0, 0, 0), Vector3(300, 100, 300));
+	scene->setGravity(Vector3(0));
+
+	//list<PhysicActor*> parts;
+	RigidBody* part1 = new RigidBody(gPx, scene, Vector3(-9, 0, 12), Vector3(1), Vector3(0), colores[RED], true, 3, bb);
+	RigidBody* part2 = new RigidBody(gPx, scene, Vector3(7, 0, 0), Vector3(1), Vector3(0), colores[BLUE], true, 6, bb);
+	RigidBody* part3 = new RigidBody(gPx, scene, Vector3(-10, 0, 0), Vector3(1), Vector3(0), colores[GREEN], true, 3, bb);
+	RigidBody* part4 = new RigidBody(gPx, scene, Vector3(9, 0, -12), Vector3(1), Vector3(0), colores[YELLOW], true, 1.5, bb);
+
+	myActors.push_back(part1); myActors.push_back(part2); myActors.push_back(part3); myActors.push_back(part4);
+	int randK = (rand() % 10) + 1;
+	fgs.push_back(new AnchoredSpringGenerator( randK, 20, Vector3(0)));
+
+	//myActors.splice(myActors.end(), parts);
+	afr->addRegistry(fgs, myActors);
+}
+
+#pragma endregion
+
 void ParticleSystem::createActorGenerator(PhysicActor* model, Vector3 var_v, double prob, bool up, Vector3 var_p) {
 	int type = rand() % 2;
 	string name = "PartGenerator" + std::to_string(actorsGenerators.size() + 1);
@@ -322,6 +422,9 @@ void ParticleSystem::clear() {
 	floutingBox = nullptr;
 	delete currentModel; currentModel = nullptr;
 	delete bb; bb = nullptr;
+	if (floor != nullptr) { delete floor; floor = nullptr; }
+
+	scene->setGravity(Vector3(0));
 	
 	afr->deleteAllActorsRegistry(myActors);
 

@@ -102,18 +102,12 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	{
 	//case 'B': break;
 	//case ' ':	break;
-		case 'H': pSys->showAnchoredSpringForce(); break;
-		case 'J': pSys->showSpringForce(); break;
-		case 'K': pSys->showElastic(); break;
-		case 'L': pSys->showBouyancyForce(); break;
-		case 'G': pSys->showGravityForce(); break;
-		case 'F': pSys->addWind(); break;
-		case 'M': pSys->changeDimensions(true); break;
-		case 'N': pSys->changeDimensions(false); break;
-		case 'Y': pSys->changeK(true); break;
-		case 'U': pSys->changeK(false); break;
-		case 'V': pSys->changeMass(true); break;
-		case 'B': pSys->changeMass(false); break;
+		case 'G': pSys->gravityRigid(); break;
+		case 'H': pSys->windRigid(); break;
+		case 'J': pSys->tornadoRigid(); break;
+		case 'K': pSys->explosionRigid(); break;
+		case 'L': pSys->anchoredSpringsRigid(); break;
+			
 		case ' ': pSys->clear(); break;
 	}
 }

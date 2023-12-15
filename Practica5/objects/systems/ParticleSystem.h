@@ -37,6 +37,8 @@ protected:
 	bool existGrav, existWind;
 	BoxParticle* floutingBox;
 
+	RigidBody* floor;
+
 public:
 	ParticleSystem(PxPhysics* g, PxScene* s);
 	~ParticleSystem();
@@ -67,6 +69,14 @@ public:
 	void changeK(bool increase);
 	void changeDimensions(bool increase);
 	void changeMass(bool increase);
+
+	// Para los casos de Rigidos
+	void gravityRigid();
+	void windRigid();
+	void tornadoRigid();
+	void explosionRigid();
+	void anchoredSpringsRigid();
+
 
 	void createActorGenerator(PhysicActor* model, Vector3 var_v, double prob, bool up = true, Vector3 var_p = Vector3(1));
 
