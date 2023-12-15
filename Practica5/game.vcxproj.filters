@@ -34,9 +34,6 @@
     <ClCompile Include="objects\generators\ForceGenerators\Forces.cpp">
       <Filter>objects\generators\ForceGenerators</Filter>
     </ClCompile>
-    <ClCompile Include="objects\generators\RigidBodyGenerator.cpp">
-      <Filter>objects\generators</Filter>
-    </ClCompile>
     <ClCompile Include="objects\physicObjects\PhysicActor.cpp">
       <Filter>objects\physicObjects</Filter>
     </ClCompile>
@@ -95,9 +92,6 @@
     </ClInclude>
     <ClInclude Include="objects\physicObjects\RigidBody.h">
       <Filter>objects\physicObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="objects\generators\RigidBodyGenerator.h">
-      <Filter>objects\generators</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

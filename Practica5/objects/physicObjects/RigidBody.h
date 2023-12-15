@@ -10,8 +10,8 @@ protected:
 	bool movable;
 	PxShape* shape;
 	Vector3 scale;
+	double density;
 	Vector4 color;
-
 public:
 	RigidBody(PxPhysics* gPx, PxScene* scene, Vector3 pos, Vector3 s, Vector3 vel, Vector4 col, bool mov, double m, BoundingBox* _bb = nullptr, float lt = -1);
 

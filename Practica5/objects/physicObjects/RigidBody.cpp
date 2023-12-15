@@ -10,9 +10,9 @@ RigidBody::RigidBody(PxPhysics* gPx, PxScene* scene, Vector3 pos, Vector3 s, Vec
 		renderItem = new RenderItem(shape, bDynamic, color);
 		scene->addActor(*bDynamic);
 
-		bDynamic->setMass(m);
 		bDynamic->setLinearVelocity(vel);
-		//PxRigidBodyExt::setMassAndUpdateInertia(static_cast<*PxRigidBody>(bDynamic), PxReal(mass));
+		density = m / ((scale.x * 2) * (scale.y * 2) * (scale.z * 2));
+		PxRigidBodyExt::setMassAndUpdateInertia(*static_cast<PxRigidBody*>(bDynamic), density);
 	}
 	else {
 		bStatic = gPx->createRigidStatic(pose);
