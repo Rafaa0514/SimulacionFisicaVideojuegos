@@ -34,7 +34,6 @@
     <ClCompile Include="objects\generators\ForceGenerators\Forces.cpp">
       <Filter>objects\generators\ForceGenerators</Filter>
     </ClCompile>
-    <ClCompile Include="objects\physicObjects\BoxParticle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -79,7 +78,9 @@
     <ClInclude Include="objects\physicObjects\BoundingBox.h">
       <Filter>objects\physicObjects</Filter>
     </ClInclude>
-    <ClInclude Include="objects\physicObjects\BoxParticle.h" />
+    <ClInclude Include="objects\physicObjects\BoxParticle.h">
+      <Filter>objects\physicObjects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

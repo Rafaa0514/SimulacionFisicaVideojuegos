@@ -7,7 +7,7 @@ using namespace physx;
 class PhysicActor {
 protected:
 	PxTransform pose;
-
+	PxActor* act;
 	double mass, inv_mass;
 	float damping;
 

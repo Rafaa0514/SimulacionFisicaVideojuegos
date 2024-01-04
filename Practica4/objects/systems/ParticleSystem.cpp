@@ -244,7 +244,7 @@ void ParticleSystem::showBouyancyForce() {
 
 	bb = new BoundingBox(Vector3(0, 0, 0), Vector3(300, 100, 300));
 
-	floutingBox = new BoxParticle(Vector3(0, 70, 0), Vector3(0), 1, 200, colores[RED], -1, bb);
+	floutingBox = new BoxParticle(Vector3(0, 50, 0), Vector3(0), 1, 200, colores[RED], -1, bb, 0.15);
 	myParticles.push_back(floutingBox);
 
 	fgs.push_back(new BouyancyForceGenerator(2, 8, 1000, Vector3(0, 50, 0), Vector3(20, 100, 20)));

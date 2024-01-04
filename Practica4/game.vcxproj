@@ -260,7 +260,6 @@
     <ClCompile Include="objects\generators\ParticleGenerators\GaussianParticleGenerator.cpp" />
     <ClCompile Include="objects\generators\ParticleGenerators\ParticleGenerator.cpp" />
     <ClCompile Include="objects\generators\ParticleGenerators\UniformParticleGenerator.cpp" />
-    <ClCompile Include="objects\physicObjects\BoxParticle.cpp" />
     <ClCompile Include="objects\physicObjects\Firework.cpp" />
     <ClCompile Include="objects\physicObjects\Particle.cpp" />
     <ClCompile Include="objects\systems\ParticleSystem.cpp" />
