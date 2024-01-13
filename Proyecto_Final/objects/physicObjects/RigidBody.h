@@ -1,5 +1,6 @@
 #pragma once
 #include "PhysicActor.h"
+#include <random>
 
 using namespace physx;
 
@@ -12,6 +13,11 @@ protected:
 	Vector3 scale;
 	double density;
 	Vector4 color;
+
+
+	std::random_device rd;
+	std::mt19937 rg;
+
 public:
 	RigidBody(PxPhysics* gPx, PxScene* scene, Vector3 pos, Vector3 s, Vector3 vel, Vector4 col, bool mov, double m, BoundingBox* _bb = nullptr, float lt = -1);
 
@@ -29,4 +35,6 @@ public:
 	virtual float getRadious();
 
 	virtual PhysicActor* clone(PxPhysics* gPx, PxScene* scene, Vector3 pos, Vector3 vel, float lt, BoundingBox* _bb);
+	virtual PhysicActor* clone(PxPhysics* gPx, PxScene* scene, Vector3 pos, Vector3 vel, float lt,
+		BoundingBox* _bb, double rnd);
 };

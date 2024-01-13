@@ -50,4 +50,6 @@ public:
 	virtual float getRadious() = 0;
 
 	virtual PhysicActor* clone(PxPhysics* gPx, PxScene* scene, Vector3 pos, Vector3 vel, float lt, BoundingBox* _bb) = 0;
+	virtual PhysicActor* clone(PxPhysics* gPx, PxScene* scene, Vector3 pos, Vector3 vel, float lt, 
+		BoundingBox* _bb, double rnd) = 0;
 };

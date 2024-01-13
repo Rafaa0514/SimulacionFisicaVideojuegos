@@ -3,6 +3,7 @@
 GameManager::GameManager(PxPhysics* g, PxScene* scene) : cooldown(0), countdown(0) {
 	pSys = new PhysicsSystem(g, scene);
 	showMainMenu();
+	mainGravity = new GravityGenerator(Vector3(0, 7.5, 0), Vector3(0), Vector3(200));
 }
 
 GameManager::~GameManager() {
@@ -30,6 +31,7 @@ void GameManager::nextLevel() {
 	currentState = GAME;
 	renderItems = true;
 	clearTexts();
+	pSys->clear();
 	switch (currentLevel)
 	{
 		case NONE:	createLevelOne();	break;
@@ -56,7 +58,9 @@ void GameManager::showPauseMenu() {
 
 void GameManager::showEndMenu() {
 	pSys->clear();
+
 	// Añadir fireworks
+
 
 	currentState = END_MENU;
 	currentLevel = NONE;
@@ -65,7 +69,7 @@ void GameManager::showEndMenu() {
 	texts[SUBTITLE_1] = "¡ Se acabo el tiempo !";
 	texts[SUBTITLE_2] = "Acertaste " + to_string(objKilled) + " objetivos";
 	texts[DOWN_LEFT] = "Gracias por jugar";
-	texts[UPPER_LEFT] = "";
+	texts[UPPER_LEFT] = "Presione ESPACIO para ir a MENU PRINCIPAL";
 	texts[UPPER_RIGHT] = "";
 
 	renderItems = false;
@@ -76,19 +80,21 @@ void GameManager::createLevelOne() {
 	texts[DOWN_LEFT] = "NIVEL 1";
 	timePerLevel = 30;
 
+	pSys->setObjectsLimit(10);
+	pSys->setBB(CENTER_POSITION, Vector3(100));
 
 	// Crear generador Particula 1 y generador de viento oeste
-	Particle* model1 = new Particle(Vector3(45, 25, 100), Vector3(0, 0, 0), 2.5, 2, colores[YELLOW], -1, pSys->getBB());
+	Particle* model1 = new Particle(Vector3(45, 25, 80), Vector3(0, 0, 0), 2.5, 2, colores[YELLOW], 5, pSys->getBB());
 	pSys->createActorGenerator(model1, Vector3(1, 20, 1), Vector3(0, 0, 0), 0.8, TARGET_1, false);
 	
-	WindGenerator* westWind = new WindGenerator(1, 0.1, Vector3(-25,0,0), Vector3(45, 25, 100), Vector3(20, 100, 20));
+	WindGenerator* westWind = new WindGenerator(1, 0.1, Vector3(-25,0,0), Vector3(45, 25, 80), Vector3(20, 100, 20));
 	pSys->addForceGenerator(westWind, TARGET_1);
 
 	// Crear generador Particula 2 y generador de viento este
-	Particle* model2 = new Particle(Vector3(-45, 25, 100), Vector3(0, 0, 0), 2.5, 2, colores[RED], -1, pSys->getBB());
+	Particle* model2 = new Particle(Vector3(-45, 25, 80), Vector3(0, 0, 0), 2.5, 2, colores[RED], 5, pSys->getBB());
 	pSys->createActorGenerator(model2, Vector3(1, 20, 1), Vector3(0, 0, 0), 0.8, TARGET_2, false);
 
-	WindGenerator* eastWind = new WindGenerator(1, 0.1, Vector3(25, 0, 0), Vector3(-45, 25, 100), Vector3(20, 100, 20));
+	WindGenerator* eastWind = new WindGenerator(1, 0.1, Vector3(25, 0, 0), Vector3(-45, 25, 80), Vector3(20, 100, 20));
 	pSys->addForceGenerator(eastWind, TARGET_2);
 }
 
@@ -96,14 +102,32 @@ void GameManager::createLevelTwo() {
 	currentLevel = TWO;
 	texts[DOWN_LEFT] = "NIVEL 2";
 	timePerLevel = 45;
-	pSys->clear();
+	pSys->setObjectsLimit(40);
+	pSys->setBB(CENTER_POSITION, Vector3(200));
 
-	pSys->setGravity(Vector3(0, 0, 0));
+	Vector3 originalR = Vector3(40, 10, 60);
+	Vector3 originalL = Vector3(-40, 10, 60);
 
 	// Crear Particula y muelles
+	for (int j = 0; j < 4; j++) {
+		for (int i = 0; i < 5; i++) {
+			Particle* der = new Particle(originalR, Vector3(0), 1.5, 1.25, colores[YELLOW], -1, pSys->getBB());
+			Particle* izq = new Particle(originalL, Vector3(0), 1.5, 1.25, colores[RED], -1, pSys->getBB());
 
-	// Crear Solidos y muelles
-	
+			AnchoredSpringGenerator* muelleDer = new AnchoredSpringGenerator((rand() % 10) + 1, 20, originalR + Vector3(10, 0, 0));
+			AnchoredSpringGenerator* muelleIzq = new AnchoredSpringGenerator((rand() % 10) + 1, 20, originalL - Vector3(10, 0, 0));
+
+			pSys->addForceAndActor(muelleDer, der, TARGET_1); 
+			pSys->addForceAndActor(muelleIzq, izq, TARGET_2);
+
+			originalR.y += 4;
+			originalL.y += 4;
+		}
+		originalR.y = 10;
+		originalL.y = 10;
+		originalR.z += 15;
+		originalL.z += 15;
+	}
 }
 
 void GameManager::createLevelThree() {
@@ -111,9 +135,19 @@ void GameManager::createLevelThree() {
 	texts[DOWN_LEFT] = "NIVEL 3";
 	timePerLevel = 60;
 
+	pSys->setGravity(Vector3(0, -9.8, 0));
+	pSys->setBB(CENTER_POSITION, Vector3(70, 60, 70));
+	pSys->setObjectsLimit(25);
+
 	// Crear Trampolin y solidos 
+	RigidBody* caja = 
+		new RigidBody(pSys->gPx, pSys->scene, CENTER_POSITION, Vector3(1, 1, 1), Vector3(0), colores[RED], true, 2, pSys->getBB(), 12);
 
+	pSys->createActorGenerator(caja, Vector3(15, 1, 15), Vector3(0), 0.7, TARGET_1, false);
 
+	Vector3 centroTrampolin = CENTER_POSITION - Vector3(0, 25, 0);
+	BouyancyForceGenerator* bfg = new BouyancyForceGenerator(2, 8, 1000, centroTrampolin, Vector3(30, 100, 30));
+	pSys->addForceGenerator(bfg, TARGET_1);
 }
 
 void GameManager::checkCollisions(Layer a, Layer b) {
@@ -133,7 +167,9 @@ void GameManager::checkCollisions(Layer a, Layer b) {
 
 void GameManager::shoot() {
 	// Disparar
-	
+	Vector3 posP = GetCamera()->getTransform().p + GetCamera()->getDir() * 10;
+	Particle* proyectile = new Particle(posP, GetCamera()->getDir() * 75, 1.5, 3, colores[WHITE], 1.5, pSys->getBB());
+	pSys->addForceAndActor(mainGravity, proyectile, PROYECTILES, false);
 }
 
 void GameManager::addFireworks() {
@@ -182,9 +218,16 @@ void GameManager::handleEvents(char key) {
 			{
 				case MAIN_MENU: nextLevel(); break;
 
-				case PAUSE_MENU: showPauseMenu(); break;
+				case PAUSE_MENU: {
+					pause = false;
+					renderItems = true;
+					currentState = GAME;
+					clearTexts();
+				} break;
 
 				case END_MENU: showMainMenu(); break;
+
+				case GAME: shoot(); break;
 			}
 		}break;
 	}

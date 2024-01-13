@@ -16,6 +16,8 @@ protected:
 	Level currentLevel;
 	PhysicsSystem* pSys;
 
+	GravityGenerator* mainGravity;
+
 	int objKilled;
 
 	bool wait;

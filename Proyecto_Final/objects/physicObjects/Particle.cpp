@@ -22,7 +22,7 @@ bool Particle::integrate(double t) {
 
 
 bool Particle::collides(PhysicActor* other) {
-	return abs((other->getPos() - getPos()).magnitude()) < getRadious();
+	return abs((other->getPos() - getPos()).magnitude()) < (getRadious() + other->getRadious());
 }
 
 void Particle::addForce(Vector3 f) {
@@ -43,6 +43,11 @@ float Particle::getHeight() {
 
 PhysicActor* Particle::clone(PxPhysics* gPx, PxScene* scene, Vector3 p, Vector3 v, float lt, BoundingBox* _bb) {
 	return new Particle(p, v, radious, mass, color, lt, _bb);
+}
+
+
+PhysicActor* Particle::clone(PxPhysics* gPx, PxScene* scene, Vector3 p, Vector3 v, float lt, BoundingBox* _bb, double rnd) {
+	return new Particle(p, v, radious * rnd, mass * rnd, color, lt * rnd, _bb);
 }
 
 Particle* Particle::clone() {

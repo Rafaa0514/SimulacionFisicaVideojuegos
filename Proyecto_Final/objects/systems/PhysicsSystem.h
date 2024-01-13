@@ -10,12 +10,10 @@
 
 using namespace physx;
 const int NUM_LAYERS = 4;
-const Vector3 CENTER_POSITION = Vector3(0, 25, 75);
+const Vector3 CENTER_POSITION = Vector3(0, 25, 60);
 
 class PhysicsSystem {
 protected:
-	PxPhysics* gPx;
-	PxScene* scene;
 
 	int objectsLimit = 100;
 	PhysicActor* currentModel;
@@ -40,6 +38,9 @@ protected:
 	RigidBody* floor;
 
 public:
+	PxPhysics* gPx;
+	PxScene* scene;
+
 	PhysicsSystem(PxPhysics* g, PxScene* s);
 	~PhysicsSystem();
 
@@ -53,11 +54,12 @@ public:
 
 	// Setters
 	void setGravity(Vector3 grav) { scene->setGravity(grav); }
-	void setBB(Vector3 p, Vector3 s) { bb->setBBProperties(p, s); }
+	void setBB(Vector3 p, Vector3 s) { delete bb; bb = new BoundingBox(p, s); }
 	void setObjectsLimit(int newLimit) { objectsLimit = newLimit; }
 
 	void addActor(PhysicActor* newActor, Layer l = DEFAULT) { myActors[l].push_back(newActor); }
 	void addForceGenerator(ForceGenerator* fg, Layer l = DEFAULT) { fgs.push_back(fg); afr->addRegistry(fg, myActors[l]); }
+	void addForceAndActor(ForceGenerator* fg, PhysicActor* a, Layer l, bool addFG = true);
 
 	void updateForcesTime(double t);
 

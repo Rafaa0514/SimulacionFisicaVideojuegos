@@ -48,5 +48,7 @@ public:
 	virtual void clearForce();
 	
 	virtual PhysicActor* clone(PxPhysics* gPx, PxScene* scene, Vector3 pos, Vector3 vel, float lt, BoundingBox* _bb);
+	virtual PhysicActor* clone(PxPhysics* gPx, PxScene* scene, Vector3 pos, Vector3 vel, float lt,
+		BoundingBox* _bb, double rnd);
 	virtual Particle* clone();
 };

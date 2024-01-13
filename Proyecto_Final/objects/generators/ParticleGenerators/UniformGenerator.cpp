@@ -7,6 +7,8 @@ UniformGenerator::UniformGenerator(string n, PxPhysics* g, PxScene* s, PhysicAct
 	if (!uv) assignVel();
 	// Si las partículas pueden crearse desde mas de un punto
 	if (!uniquePoint) assignPos();
+
+	rnd = new std::uniform_real_distribution<float>(0.75f, 1.5f);
 }
 
 UniformGenerator::~UniformGenerator() {
@@ -23,8 +25,10 @@ list<PhysicActor*> UniformGenerator::generateActors() {
 		if (uniqueVelocity) v = mean_vel;
 		else v = calculateVel();
 		// Crear partícula
-		if (!uniquePoint) newP = model_act->clone(gPx, scene, calculatePos(), v, model_act->getLT(), model_act->getBB());
-		else newP = model_act->clone(gPx, scene, model_act->getPos(), v, model_act->getLT(), model_act->getBB());
+		if (!uniquePoint) 
+			newP = model_act->clone(gPx, scene, calculatePos(), v, model_act->getLT(), model_act->getBB(), (*rnd)(rg));
+		else 
+			newP = model_act->clone(gPx, scene, model_act->getPos(), v, model_act->getLT(), model_act->getBB(), (*rnd)(rg));
 
 		newActors.push_back(newP);
 		afr->addRegistry(fgs, newP);

@@ -1,7 +1,8 @@
 #include "RigidBody.h"
 
 RigidBody::RigidBody(PxPhysics* gPx, PxScene* scene, Vector3 pos, Vector3 s, Vector3 vel, Vector4 col, bool mov, double m, BoundingBox* _bb, float lt) :
-	PhysicActor(pos, m, lt, _bb), scale(s), color(col), movable(mov) {
+	PhysicActor(pos, m, lt, _bb), scale(s), color(col), movable(mov), rg(rd()) {
+	srand((unsigned)time);
 	shape = CreateShape(PxBoxGeometry(scale));
 
 	if (movable) {
@@ -41,7 +42,7 @@ bool RigidBody::integrate(double t) {
 }
 
 bool RigidBody::collides(PhysicActor* other) {
-	return abs((other->getPos() - getPos()).magnitude()) < getRadious();
+	return abs((other->getPos() - getPos()).magnitude()) < (getRadious() + other->getRadious());
 }
 
 void RigidBody::addForce(Vector3 f) {
@@ -71,4 +72,10 @@ float RigidBody::getRadious() {
 
 PhysicActor* RigidBody::clone(PxPhysics* gPx, PxScene* scene, Vector3 pos, Vector3 vel, float lt, BoundingBox* _bb) {
 	return new RigidBody(gPx, scene, pos, scale, vel, color, movable, mass, _bb, lt);
+}
+
+
+PhysicActor* RigidBody::clone(PxPhysics* gPx, PxScene* scene, Vector3 pos, Vector3 vel, float lt,
+	BoundingBox* _bb, double rnd) {
+	return new RigidBody(gPx, scene, pos, scale * rnd, vel, color, movable, mass * rnd, _bb, lt * rnd);
 }

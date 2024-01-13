@@ -79,6 +79,12 @@ ActorGenerator* PhysicsSystem::getActorGenerator(string name) {
 	return (*it);
 }
 
+void PhysicsSystem::addForceAndActor(ForceGenerator* fg, PhysicActor* a, Layer l, bool addFG) {
+	if (addFG) fgs.push_back(fg);
+	myActors[l].push_back(a);
+	afr->addRegistry(fg, a); 
+}
+
 void PhysicsSystem::updateForcesTime(double t) {
 	for (auto it = fgs.begin(); it != fgs.end();) {
 		if (!(*it)->updateTime(t)) {

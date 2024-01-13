@@ -72,10 +72,14 @@ protected:
 
 public:
 	AnchoredSpringGenerator(double _k, double rl, Vector3 p, string name = "ANCH", double d = -1)
-		: k(_k), r_length(rl), point(p), ForceGenerator(name, d, p, Vector3(1)), pose(p),
-		renderItem(new RenderItem(CreateShape(physx::PxBoxGeometry(Vector3(1))), &pose, colores[BLACK])) {}
+		: k(_k), r_length(rl), point(p), ForceGenerator(name, d, p, Vector3(1)), pose(p)
+		,renderItem(new RenderItem(CreateShape(physx::PxBoxGeometry(Vector3(1))), &pose, colores[BLACK])) 
+		{}
 	virtual bool updateForce(PhysicActor* p);
-	virtual ~AnchoredSpringGenerator() { renderItem->release(); renderItem = nullptr; }
+	virtual ~AnchoredSpringGenerator() { 
+		renderItem->release();
+		renderItem = nullptr; 
+	}
 
 	// Getters
 	double getK() { return k; }
@@ -107,7 +111,7 @@ protected:
 public:
 	BouyancyForceGenerator(float h, float V, float d, Vector3 bbP, Vector3 bbS, double dur = -1) : 
 		ForceGenerator("FLOT", dur, bbP, bbS), height(h), volume(V), liquid_density(d), pose(bbP),
-		fluidLimit(new RenderItem(CreateShape(physx::PxBoxGeometry(Vector3(bbS.x, 0.1, bbS.z))), &pose, colores[BLUE])) {}
+		fluidLimit(new RenderItem(CreateShape(physx::PxBoxGeometry(Vector3(bbS.x, 0.1, bbS.z))), &pose, colores[YELLOW])) {}
 
 	virtual bool updateForce(PhysicActor* p);
 

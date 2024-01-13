@@ -11,7 +11,7 @@ protected:
 	uniform_real_distribution<float>* posY;
 	uniform_real_distribution<float>* posZ;
 
-
+	std::uniform_real_distribution<float>* rnd;
 public:
 	UniformGenerator(string n, PxPhysics* g, PxScene* s, PhysicActor* model, float pro, ActorForceRegistry* r, 
 		ForceGenerators& _fgs, bool up, bool uv, Vector3 varP = Vector3(1), Vector3 varV = Vector3(1), Layer _l = DEFAULT);

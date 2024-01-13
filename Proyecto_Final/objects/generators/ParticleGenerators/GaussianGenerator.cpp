@@ -7,6 +7,8 @@ GaussianGenerator::GaussianGenerator(string n, PxPhysics* g, PxScene* s, PhysicA
 	if (!uv) assignVel();
 	// Distribuciones de posición
 	if (!up) assignPos();
+
+	rnd = new std::uniform_real_distribution<float>(0.75f, 1.5f);
 }
 
 GaussianGenerator::~GaussianGenerator() {
@@ -23,8 +25,10 @@ list<PhysicActor*> GaussianGenerator::generateActors() {
 		if (uniqueVelocity) v = mean_vel;
 		else v = calculateVel();
 		// Crear partícula
-		if (uniquePoint) newP = model_act->clone(gPx, scene, model_act->getPos(), v, model_act->getLT(), model_act->getBB());
-		else newP = model_act->clone(gPx, scene, calculatePos(), v, model_act->getLT(), model_act->getBB());
+		if (uniquePoint) 
+			newP = model_act->clone(gPx, scene, model_act->getPos(), v, model_act->getLT(), model_act->getBB(), (*rnd)(rg));
+		else 
+			newP = model_act->clone(gPx, scene, calculatePos(), v, model_act->getLT(), model_act->getBB(), (*rnd)(rg));
 		
 		newParts.push_back(newP);
 		afr->addRegistry(fgs, newP);
