@@ -1,7 +1,7 @@
 #include "PhysicActor.h"
 
 PhysicActor::PhysicActor(Vector3 pos, double m, float lt, BoundingBox* _bb, float dp) :
-	pose(pos), lifeTime(lt), damping(dp), bb(_bb), renderItem(nullptr) {
+	pose(pos), lifeTime(lt), damping(dp), bb(_bb), renderItem(nullptr), dead(false) {
 	setMass(m);
 }
 
@@ -18,6 +18,7 @@ void PhysicActor::setMass(double m) {
 
 
 bool PhysicActor::integrate(double t) {
+	if (dead) return false;
 	if (lifeTime != -1) lifeTime -= t;
 	return ((bb == nullptr || bb->isInside(pose.p)) && (lifeTime == -1 || lifeTime > 0));
 }

@@ -13,8 +13,8 @@ protected:
 
 
 public:
-	UniformGenerator(string n, PxPhysics* g, PxScene* s, PhysicActor* model, Vector3 var, float pro,
-		ActorForceRegistry* r, ForceGenerators& _fgs, bool up = true, Vector3 varP = Vector3(1));
+	UniformGenerator(string n, PxPhysics* g, PxScene* s, PhysicActor* model, float pro, ActorForceRegistry* r, 
+		ForceGenerators& _fgs, bool up, bool uv, Vector3 varP = Vector3(1), Vector3 varV = Vector3(1), Layer _l = DEFAULT);
 	virtual ~UniformGenerator();
 
 	// Metodos abstractos

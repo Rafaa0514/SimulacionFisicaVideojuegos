@@ -89,6 +89,8 @@ void stepPhysics(bool interactive, double t)
 	PX_UNUSED(interactive);
 	gScene->simulate(t);
 	gScene->fetchResults(true);
+
+	GM->update(t);
 }
 
 // Function to clean data
@@ -115,12 +117,10 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	PX_UNUSED(camera);
 
 	switch(toupper(key))
-	{
-	//case 'B': break;
-	//case ' ':	break;
-		
+	{		
 		//case ' ': pSys->clear(); break;
 	}
+	GM->handleEvents(toupper(key));
 }
 
 void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)

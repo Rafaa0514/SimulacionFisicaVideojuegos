@@ -2,10 +2,11 @@
 
 PhysicsSystem::PhysicsSystem(PxPhysics* g, PxScene* s) : fgs(), gPx(g), scene(s) {
 	afr = new ActorForceRegistry();
-	bb = new BoundingBox(Vector3(0), Vector3(200));
+	bb = new BoundingBox(CENTER_POSITION, Vector3(50));
 	currentModel = nullptr;
 	floor = nullptr;
-	particlesLimit = -1;
+	objectsLimit = 10;
+
 }
 
 PhysicsSystem::~PhysicsSystem() {
@@ -17,24 +18,31 @@ void PhysicsSystem::update(double t) {
 
 	// ----- ACTORES -----
 	for (ActorGenerator* p : actorsGenerators) {
-		if (myActors.size() < particlesLimit || particlesLimit < 0) {
+		Layer l = p->getLayer();
+		if (myActors[l].size() < objectsLimit || objectsLimit < 0) {
 			list<PhysicActor*> prtcls = p->generateActors();
-			if (!prtcls.empty()) myActors.splice(myActors.end(), prtcls);
+			if (!prtcls.empty()) {
+				myActors[l].splice(myActors[l].end(), prtcls);
+			}
 		}
 	}
 
-	for (auto it = myActors.begin(); it != myActors.end(); it++) {
-		if (!(*it)->integrate(t)) {
-			deadActors.push_back(it);
+	for (int i = 0; i < NUM_LAYERS; i++) {
+		for (auto it = myActors[i].begin(); it != myActors[i].end(); it++) {
+			if (!(*it)->integrate(t)) {
+				deadActors[i].push_back(it);
+			}
 		}
 	}
 
-	for (int i = 0; i < deadActors.size(); i++) {
-		afr->deleteActorRegistry(*deadActors[i]);
-		delete* deadActors[i];
-		myActors.erase(deadActors[i]);
+	for (int i = 0; i < NUM_LAYERS; i++) {
+		for (int j = 0; j < deadActors[i].size(); j++) {
+			afr->deleteActorRegistry(*deadActors[i][j]);
+			delete* deadActors[i][j];
+			myActors[i].erase(deadActors[i][j]);
+		}
+		deadActors[i].clear();
 	}
-	deadActors.clear();
 
 	#pragma region Fireworks
 	// ----- FUEGOS ARTIFICIALES -----
@@ -82,26 +90,14 @@ void PhysicsSystem::updateForcesTime(double t) {
 	}
 }
 
-void PhysicsSystem::level1() {
-	
-}
-
-void PhysicsSystem::level2() {
-	
-}
-
-void PhysicsSystem::level3() {
-
-}
-
-void PhysicsSystem::createActorGenerator(PhysicActor* model, Vector3 var_v, double prob, bool up, Vector3 var_p) {
+void PhysicsSystem::createActorGenerator(PhysicActor* model, Vector3 var_p, Vector3 var_v, double prob, Layer l, bool up, bool uv) {
 	int type = rand() % 2;
 	string name = "PartGenerator" + std::to_string(actorsGenerators.size() + 1);
 	if (type % 2 == 0) {
-		actorsGenerators.push_back(new UniformGenerator(name, gPx, scene, model, var_v, prob, afr, fgs, up, var_p));
+		actorsGenerators.push_back(new UniformGenerator(name, gPx, scene, model, prob, afr, fgs, up, uv, var_p, var_v, l));
 	}
 	else {
-		actorsGenerators.push_back(new GaussianGenerator(name, gPx, scene, model, var_v, prob, afr, fgs, up, var_p));
+		actorsGenerators.push_back(new GaussianGenerator(name, gPx, scene, model, prob, afr, fgs, up, uv, var_p, var_v, l));
 	}
 }
 
@@ -113,13 +109,14 @@ void PhysicsSystem::clear() {
 
 	scene->setGravity(Vector3(0));
 	
-	afr->deleteAllActorsRegistry(myActors);
+	for (int i = 0; i < NUM_LAYERS; i++) {
+		afr->deleteAllActorsRegistry(myActors[i]);
+		for (PhysicActor* p : myActors[i]) delete p;
+		myActors[i].clear();
+	}
 
 	for (ActorGenerator* pg : actorsGenerators) delete pg;
 	actorsGenerators.clear();
-
-	for (PhysicActor* p : myActors) delete p;
-	myActors.clear();
 
 	for (ForceGenerator* fg : fgs) delete fg;
 	fgs.clear();

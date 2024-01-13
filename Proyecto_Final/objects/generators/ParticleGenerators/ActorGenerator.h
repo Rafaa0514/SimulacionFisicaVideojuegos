@@ -7,16 +7,19 @@
 using namespace std;
 using random_generator = std::mt19937;
 
+enum Layer { DEFAULT, TARGET_1, TARGET_2, PROYECTILES };
+
 class ActorGenerator {
 protected:
 	// Caracteristicas del generador: nombre y si es estatico o no
 	string name;
-	bool uniquePoint;
+	bool uniquePoint, uniqueVelocity;
+	Layer layer;
 
 	// Particula modelo y medias de vel, pos y varianza
 	PhysicActor* model_act = nullptr;
-	Vector3 mean_pos, mean_vel, meanVar;
-	Vector3 varPos;
+	Vector3 mean_pos, mean_vel;
+	Vector3 varPos, varVel;
 
 	// Cosas de probabilidades
 	double generation_probability = 1.0;
@@ -35,8 +38,8 @@ protected:
 	PxScene* scene;
 
 public:
-	ActorGenerator(string n, PxPhysics* g, PxScene* s, PhysicActor* p, Vector3 var, double prob, bool up, Vector3 vp,
-		ActorForceRegistry* r, ForceGenerators& _fgs);
+	ActorGenerator(string n, PxPhysics* g, PxScene* s, PhysicActor* p, double prob, bool up, bool uv, Vector3 vp, 
+		Vector3 vv,	ActorForceRegistry* r, ForceGenerators& _fgs, Layer _l);
 	~ActorGenerator();
 
 	// Setters
@@ -48,6 +51,7 @@ public:
 	// Getters
 	inline string getName() { return name; }
 	inline Vector3 getMeanVelocity() const { return mean_vel; }
+	inline Layer getLayer() const { return layer; }
 
 	virtual list<PhysicActor*> generateActors() = 0;
 	virtual Vector3 calculateVel() = 0;

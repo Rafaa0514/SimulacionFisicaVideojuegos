@@ -13,4 +13,6 @@ public:
 			(p.y < pos.y + scale.y && p.y > pos.y - scale.y) &&
 			(p.z < pos.z + scale.z && p.z > pos.z - scale.z);
 	}
+
+	void setBBProperties(Vector3 newP, Vector3 newS) { pos = newP; scale = newS; }
 };

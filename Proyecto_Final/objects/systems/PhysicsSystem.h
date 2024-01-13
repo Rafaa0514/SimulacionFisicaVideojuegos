@@ -6,19 +6,22 @@
 #include "../physicObjects/PhysicActor.h"
 #include <list>
 #include <vector>
+#include <array>
 
 using namespace physx;
+const int NUM_LAYERS = 4;
+const Vector3 CENTER_POSITION = Vector3(0, 25, 75);
 
 class PhysicsSystem {
 protected:
 	PxPhysics* gPx;
 	PxScene* scene;
 
-	int particlesLimit = 100;
+	int objectsLimit = 100;
 	PhysicActor* currentModel;
-	std::list<PhysicActor*> myActors;
+	std::array<std::list<PhysicActor*>, NUM_LAYERS> myActors;
 	std::list<ActorGenerator*> actorsGenerators;
-	std::vector<list<PhysicActor*>::iterator> deadActors;
+	std::array<std::vector<list<PhysicActor*>::iterator>, NUM_LAYERS> deadActors;
 
 	std::list<Firework*> fireworks_pool;
 	FireworkGenerator* fireworkGen;
@@ -42,16 +45,23 @@ public:
 
 	void update(double t);
 
+	// Getters
 	ActorGenerator* getActorGenerator(string name);
+	std::list<PhysicActor*> getActorsFromLayer(Layer l) { return myActors[l]; }
+	int getObjectsLimit() { return objectsLimit; }
+	BoundingBox* getBB() { return bb; }
+
+	// Setters
+	void setGravity(Vector3 grav) { scene->setGravity(grav); }
+	void setBB(Vector3 p, Vector3 s) { bb->setBBProperties(p, s); }
+	void setObjectsLimit(int newLimit) { objectsLimit = newLimit; }
+
+	void addActor(PhysicActor* newActor, Layer l = DEFAULT) { myActors[l].push_back(newActor); }
+	void addForceGenerator(ForceGenerator* fg, Layer l = DEFAULT) { fgs.push_back(fg); afr->addRegistry(fg, myActors[l]); }
 
 	void updateForcesTime(double t);
 
-	// Distintos niveles
-	void level1();
-	void level2();
-	void level3();
-
-	void createActorGenerator(PhysicActor* model, Vector3 var_v, double prob, bool up = true, Vector3 var_p = Vector3(1));
+	void createActorGenerator(PhysicActor* model, Vector3 var_p, Vector3 var_v, double prob, Layer l, bool up = true, bool uv = true);
 
 	void clear();
 };

@@ -12,8 +12,8 @@ protected:
 	normal_distribution<float>* posZ;
 
 public:
-	GaussianGenerator(string n, PxPhysics* g, PxScene* s, PhysicActor* model, Vector3 vel, float prob,
-		ActorForceRegistry* r, ForceGenerators& _fgs, bool up = true, Vector3 var_pos = Vector3(1));
+	GaussianGenerator(string n, PxPhysics* g, PxScene* s, PhysicActor* model, float prob, ActorForceRegistry* r, 
+		ForceGenerators& _fgs, bool up, bool uv, Vector3 varP = Vector3(1), Vector3 varV = Vector3(1), Layer _l = DEFAULT);
 	virtual ~GaussianGenerator();
 
 	// Metodos abstractos

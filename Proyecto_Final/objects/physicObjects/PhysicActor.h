@@ -16,6 +16,8 @@ protected:
 
 	RenderItem* renderItem;
 
+	bool dead;
+
 public:
 	PhysicActor(Vector3 pos, double m, float lt = -1, BoundingBox* _bb = nullptr, float dp = 0.998);
 	~PhysicActor();
@@ -31,6 +33,10 @@ public:
 	void setPosition(Vector3 const& p) { pose.p = p; }
 	void setLifeTime(double const& lt) { lifeTime = lt; }
 	void setMass(double m);
+
+	// Manejo de vida (para colisiones)
+	void kill() { dead = true; }
+	bool isDead() { return dead; }
 
 	virtual bool integrate(double t);
 	void releaseRender();
