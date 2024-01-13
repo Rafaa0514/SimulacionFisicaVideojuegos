@@ -6,7 +6,7 @@ PhysicsSystem::PhysicsSystem(PxPhysics* g, PxScene* s) : fgs(), gPx(g), scene(s)
 	currentModel = nullptr;
 	floor = nullptr;
 	objectsLimit = 10;
-
+	fireworkGen = new FireworkGenerator("Fuego valirio", afr, fgs, Vector3(20, 30, 20));
 }
 
 PhysicsSystem::~PhysicsSystem() {
@@ -83,6 +83,11 @@ void PhysicsSystem::addForceAndActor(ForceGenerator* fg, PhysicActor* a, Layer l
 	if (addFG) fgs.push_back(fg);
 	myActors[l].push_back(a);
 	afr->addRegistry(fg, a); 
+}
+
+void PhysicsSystem::addFirework(Firework* f) {
+	fireworks_pool.push_back(f);
+	afr->addRegistry(fgs, f);
 }
 
 void PhysicsSystem::updateForcesTime(double t) {

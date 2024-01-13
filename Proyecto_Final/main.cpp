@@ -52,7 +52,6 @@ ContactReportCallback gContactReportCallback;
 
 GameManager* GM = nullptr;
 
-
 // Initialize physics engine
 void initPhysics(bool interactive)
 {
@@ -115,11 +114,6 @@ void cleanupPhysics(bool interactive)
 void keyPress(unsigned char key, const PxTransform& camera)
 {
 	PX_UNUSED(camera);
-
-	switch(toupper(key))
-	{		
-		//case ' ': pSys->clear(); break;
-	}
 	GM->handleEvents(toupper(key));
 }
 

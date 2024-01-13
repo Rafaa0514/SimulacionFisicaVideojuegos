@@ -1,6 +1,6 @@
 #include "GameManager.h"
 
-GameManager::GameManager(PxPhysics* g, PxScene* scene) : cooldown(0), countdown(0) {
+GameManager::GameManager(PxPhysics* g, PxScene* scene) : cooldown(0), countdown(0), objKilled(0) {
 	pSys = new PhysicsSystem(g, scene);
 	showMainMenu();
 	mainGravity = new GravityGenerator(Vector3(0, 7.5, 0), Vector3(0), Vector3(200));
@@ -58,10 +58,8 @@ void GameManager::showPauseMenu() {
 
 void GameManager::showEndMenu() {
 	pSys->clear();
-
-	// Añadir fireworks
-
-
+	wait = true;
+	countdown = 10;
 	currentState = END_MENU;
 	currentLevel = NONE;
 
@@ -72,7 +70,8 @@ void GameManager::showEndMenu() {
 	texts[UPPER_LEFT] = "Presione ESPACIO para ir a MENU PRINCIPAL";
 	texts[UPPER_RIGHT] = "";
 
-	renderItems = false;
+	// Añadir fireworks
+	addFireworks();
 }
 
 void GameManager::createLevelOne() {
@@ -173,7 +172,24 @@ void GameManager::shoot() {
 }
 
 void GameManager::addFireworks() {
+	pSys->setBB(CENTER_POSITION, Vector3(900));
+	pSys->setObjectsLimit(-1);
+	renderItems = true;
 
+	Vector3 pos = Vector3(30, -80, 900);
+	Vector3 vel = Vector3(-5, 20, -100);
+
+	pSys->addForceGenerator(new GravityGenerator(Vector3(0, -9.8, 0), CENTER_POSITION, Vector3(200)));
+
+	for (int j = 0; j < 3; j++) {
+		for (int i = 0; i < 3; i++) {
+			Firework* fire = new Firework(pos, vel, 2.5, colores[rand() % 6], 3.5, pSys->getBB(), 4, 5);
+			pSys->addFirework(fire);
+			pos.x -= 30;
+		}
+		pos.x = 30;
+		pos.y += 30;
+	}
 }
 
 void GameManager::clearTexts() {
@@ -204,6 +220,11 @@ void GameManager::update(double t) {
 			if (timePerLevel <= 0.0) nextLevel();
 		}
 	}
+	else if (currentState == END_MENU) {
+		countdown -= t;
+		if (countdown <= 1) { countdown = 0; wait = false; }
+		pSys->update(t);
+	}
 }
 
 void GameManager::handleEvents(char key) {
@@ -225,9 +246,9 @@ void GameManager::handleEvents(char key) {
 					clearTexts();
 				} break;
 
-				case END_MENU: showMainMenu(); break;
+				case END_MENU: if (!wait) showMainMenu(); break;
 
-				case GAME: shoot(); break;
+				case GAME: if (!wait) shoot(); break;
 			}
 		}break;
 	}
@@ -243,7 +264,7 @@ void GameManager::handleEvents(char key) {
 				showMainMenu();
 			}break;
 
-			case END_MENU: exit(0); break;
+			case END_MENU: if (!wait) exit(0); break;
 		}
 	}
 }

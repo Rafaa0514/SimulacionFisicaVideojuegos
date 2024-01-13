@@ -57,9 +57,11 @@ public:
 	void setBB(Vector3 p, Vector3 s) { delete bb; bb = new BoundingBox(p, s); }
 	void setObjectsLimit(int newLimit) { objectsLimit = newLimit; }
 
+	// Añadir diferentes efectos fisicos
 	void addActor(PhysicActor* newActor, Layer l = DEFAULT) { myActors[l].push_back(newActor); }
 	void addForceGenerator(ForceGenerator* fg, Layer l = DEFAULT) { fgs.push_back(fg); afr->addRegistry(fg, myActors[l]); }
 	void addForceAndActor(ForceGenerator* fg, PhysicActor* a, Layer l, bool addFG = true);
+	void addFirework(Firework* f);
 
 	void updateForcesTime(double t);
 

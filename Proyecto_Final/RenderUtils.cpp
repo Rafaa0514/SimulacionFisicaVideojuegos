@@ -54,8 +54,6 @@ void motionCallback(int x, int y)
 
 void keyboardCallback(unsigned char key, int x, int y)
 {
-	// if(key==27) exit(0);
-
 	if(!sCamera->handleKey(key, x, y))
 		keyPress(key, sCamera->getTransform());
 }
@@ -97,7 +95,6 @@ void renderCallback()
 
 	startRender(sCamera->getEye(), sCamera->getDir());
 
-	//fprintf(stderr, "Num Render Items: %d\n", static_cast<int>(gRenderItems.size()));
 	if (renderItems) {
 		for (auto it = gRenderItems.begin(); it != gRenderItems.end(); ++it)
 		{
@@ -115,16 +112,6 @@ void renderCallback()
 			renderShape(*obj->shape, objTransform ? *objTransform : physx::PxTransform(PxIdentity), obj->color);
 		}
 	}
-
-	//PxScene* scene;
-	//PxGetPhysics().getScenes(&scene, 1);
-	//PxU32 nbActors = scene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC | PxActorTypeFlag::eRIGID_STATIC);
-	//if (nbActors)
-	//{
-	//	std::vector<PxRigidActor*> actors(nbActors);
-	//	scene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC | PxActorTypeFlag::eRIGID_STATIC, reinterpret_cast<PxActor**>(&actors[0]), nbActors);
-	//	renderActors(&actors[0], static_cast<PxU32>(actors.size()), true, Vector4(1.0f, 0.0f, 0.0f, 1.0f));
-	//}
 
 	finishRender();
 }
