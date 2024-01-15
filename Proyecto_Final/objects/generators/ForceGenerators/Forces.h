@@ -109,11 +109,9 @@ protected:
 	physx::PxTransform pose;
 
 public:
-	BouyancyForceGenerator(float h, float V, float d, Vector3 bbP, Vector3 bbS, double dur = -1) : 
-		ForceGenerator("FLOT", dur, bbP, bbS), height(h), volume(V), liquid_density(d), pose(bbP),
+	BouyancyForceGenerator(float h, float d, Vector3 bbP, Vector3 bbS, double dur = -1) : 
+		ForceGenerator("FLOT", dur, bbP, bbS), height(h), volume(0), liquid_density(d), pose(bbP),
 		fluidLimit(new RenderItem(CreateShape(physx::PxBoxGeometry(Vector3(bbS.x, 0.1, bbS.z))), &pose, colores[YELLOW])) {}
 
 	virtual bool updateForce(PhysicActor* p);
-
-	~BouyancyForceGenerator() {}
 };

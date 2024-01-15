@@ -8,7 +8,6 @@ enum Positions { TITLE, SUBTITLE_1, SUBTITLE_2, UPPER_LEFT, UPPER_RIGHT, DOWN_LE
 enum State {MAIN_MENU, GAME, PAUSE_MENU, END_MENU};
 enum Level { NONE, ONE, TWO, THREE };
 
-const double MAX_MATCH_TIME = 180;
 
 class GameManager {
 protected:

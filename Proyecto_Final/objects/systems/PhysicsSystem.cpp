@@ -4,9 +4,8 @@ PhysicsSystem::PhysicsSystem(PxPhysics* g, PxScene* s) : fgs(), gPx(g), scene(s)
 	afr = new ActorForceRegistry();
 	bb = new BoundingBox(CENTER_POSITION, Vector3(50));
 	currentModel = nullptr;
-	floor = nullptr;
 	objectsLimit = 10;
-	fireworkGen = new FireworkGenerator("Fuego valirio", afr, fgs, Vector3(20, 30, 20));
+	fireworkGen = new FireworkGenerator("Fuegos de victoria", afr, fgs, Vector3(20, 30, 20));
 }
 
 PhysicsSystem::~PhysicsSystem() {
@@ -113,10 +112,8 @@ void PhysicsSystem::createActorGenerator(PhysicActor* model, Vector3 var_p, Vect
 }
 
 void PhysicsSystem::clear() {
-	floutingBox = nullptr;
 	delete currentModel; currentModel = nullptr;
 	delete bb; bb = nullptr;
-	if (floor != nullptr) { delete floor; floor = nullptr; }
 
 	scene->setGravity(Vector3(0));
 	

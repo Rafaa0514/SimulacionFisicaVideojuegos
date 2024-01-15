@@ -8,13 +8,14 @@ GameManager::GameManager(PxPhysics* g, PxScene* scene) : cooldown(0), countdown(
 
 GameManager::~GameManager() {
 	delete pSys;
+	delete mainGravity;
 }
 
 void GameManager::showMainMenu() {
 	currentState = MAIN_MENU;
 	currentLevel = NONE;
 	pause = false;
-	timePerLevel = MAX_MATCH_TIME;
+	timePerLevel = 0;
 	objKilled = 0;
 
 	texts[TITLE] = "[ AIM DOWN ]";
@@ -104,28 +105,28 @@ void GameManager::createLevelTwo() {
 	pSys->setObjectsLimit(40);
 	pSys->setBB(CENTER_POSITION, Vector3(200));
 
-	Vector3 originalR = Vector3(40, 10, 60);
-	Vector3 originalL = Vector3(-40, 10, 60);
+	Vector3 posPartR = Vector3(40, 10, 60);
+	Vector3 posPartL = Vector3(-40, 10, 60);
 
 	// Crear Particula y muelles
 	for (int j = 0; j < 4; j++) {
 		for (int i = 0; i < 5; i++) {
-			Particle* der = new Particle(originalR, Vector3(0), 1.5, 1.25, colores[YELLOW], -1, pSys->getBB());
-			Particle* izq = new Particle(originalL, Vector3(0), 1.5, 1.25, colores[RED], -1, pSys->getBB());
+			Particle* der = new Particle(posPartR, Vector3(0), 1.5, 1.25, colores[YELLOW], -1, pSys->getBB());
+			Particle* izq = new Particle(posPartL, Vector3(0), 1.5, 1.25, colores[RED], -1, pSys->getBB());
 
-			AnchoredSpringGenerator* muelleDer = new AnchoredSpringGenerator((rand() % 10) + 1, 20, originalR + Vector3(10, 0, 0));
-			AnchoredSpringGenerator* muelleIzq = new AnchoredSpringGenerator((rand() % 10) + 1, 20, originalL - Vector3(10, 0, 0));
+			AnchoredSpringGenerator* muelleDer = new AnchoredSpringGenerator((rand() % 10) + 1, 20, posPartR + Vector3(10, 0, 0));
+			AnchoredSpringGenerator* muelleIzq = new AnchoredSpringGenerator((rand() % 10) + 1, 20, posPartL - Vector3(10, 0, 0));
 
 			pSys->addForceAndActor(muelleDer, der, TARGET_1); 
 			pSys->addForceAndActor(muelleIzq, izq, TARGET_2);
 
-			originalR.y += 4;
-			originalL.y += 4;
+			posPartR.y += 4;
+			posPartL.y += 4;
 		}
-		originalR.y = 10;
-		originalL.y = 10;
-		originalR.z += 15;
-		originalL.z += 15;
+		posPartR.y = 10;
+		posPartL.y = 10;
+		posPartR.z += 15;
+		posPartL.z += 15;
 	}
 }
 
@@ -145,7 +146,7 @@ void GameManager::createLevelThree() {
 	pSys->createActorGenerator(caja, Vector3(15, 1, 15), Vector3(0), 0.7, TARGET_1, false);
 
 	Vector3 centroTrampolin = CENTER_POSITION - Vector3(0, 25, 0);
-	BouyancyForceGenerator* bfg = new BouyancyForceGenerator(2, 8, 1000, centroTrampolin, Vector3(30, 100, 30));
+	BouyancyForceGenerator* bfg = new BouyancyForceGenerator(2, 1000, centroTrampolin, Vector3(30, 300, 30));
 	pSys->addForceGenerator(bfg, TARGET_1);
 }
 
@@ -167,7 +168,7 @@ void GameManager::checkCollisions(Layer a, Layer b) {
 void GameManager::shoot() {
 	// Disparar
 	Vector3 posP = GetCamera()->getTransform().p + GetCamera()->getDir() * 10;
-	Particle* proyectile = new Particle(posP, GetCamera()->getDir() * 75, 1.5, 3, colores[WHITE], 1.5, pSys->getBB());
+	Particle* proyectile = new Particle(posP, GetCamera()->getDir() * 75, 1.5, 1.5, colores[WHITE], 1.5, pSys->getBB());
 	pSys->addForceAndActor(mainGravity, proyectile, PROYECTILES, false);
 }
 

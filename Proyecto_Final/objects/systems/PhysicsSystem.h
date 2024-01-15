@@ -16,6 +16,8 @@ class PhysicsSystem {
 protected:
 
 	int objectsLimit = 100;
+	double timer;
+
 	PhysicActor* currentModel;
 	std::array<std::list<PhysicActor*>, NUM_LAYERS> myActors;
 	std::list<ActorGenerator*> actorsGenerators;
@@ -30,12 +32,6 @@ protected:
 
 	BoundingBox* bb;
 
-	double timer;
-	
-	BoxParticle* floutingBox;
-
-
-	RigidBody* floor;
 
 public:
 	PxPhysics* gPx;

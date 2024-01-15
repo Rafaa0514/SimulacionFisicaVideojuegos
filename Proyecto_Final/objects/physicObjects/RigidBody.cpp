@@ -1,7 +1,7 @@
 #include "RigidBody.h"
 
 RigidBody::RigidBody(PxPhysics* gPx, PxScene* scene, Vector3 pos, Vector3 s, Vector3 vel, Vector4 col, bool mov, double m, BoundingBox* _bb, float lt) :
-	PhysicActor(pos, m, lt, _bb), scale(s), color(col), movable(mov), rg(rd()) {
+	PhysicActor(pos, m, lt, _bb), scale(s), color(col), movable(mov) {
 	srand((unsigned)time);
 	shape = CreateShape(PxBoxGeometry(scale));
 
